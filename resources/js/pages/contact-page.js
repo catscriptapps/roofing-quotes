@@ -7,11 +7,15 @@
 
 import { FormValidator } from '../utils/form-validator.js'; 
 import { showToast } from '../ui/toast.js'; 
+import { AnimationEngine } from '../utils/animations.js';
 
 /**
  * Initializes the contact form logic.
  */
 export function init() {
+  // Fire the AOS refresh to catch the new content
+  AnimationEngine.refresh();
+
   const form = document.getElementById('contact-form');
   const submitButton = document.getElementById('contact-submit');
 

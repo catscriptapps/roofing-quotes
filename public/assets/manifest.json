@@ -100,7 +100,8 @@
     "isEntry": true,
     "imports": [
       "_form-validator.min.js",
-      "_toast.min.js"
+      "_toast.min.js",
+      "_animations.min.js"
     ]
   },
   "resources/js/pages/faqs-page.js": {
