@@ -1,5 +1,4 @@
 <?php
-// /server/models/User.php
 
 declare(strict_types=1);
 
@@ -9,24 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Modernized User Model for Gonachi
+ * User Model
  * Table: users
- * * Brand Colors: Primary (Orange), Secondary (Navy)
  */
 class User extends Model
 {
     protected $table = 'users';
 
     /**
-     * Standardized primary key.
-     * We map the legacy user_id to 'id' during our reset/migration scripts.
-     */
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $keyType = 'int';
-
-    /**
-     * Attributes that are mass assignable.
+     * Mass assignable attributes.
      */
     protected $fillable = [
         'id',
@@ -36,19 +26,14 @@ class User extends Model
         'country_id',
         'region_id',
         'city',
-        'user_code',
         'password',
         'status_id',
-        'date_created',
-        'user_last_log',
         'avatar_url',
-        'email_verified',
-        'timestamp',
-        'user_type_ids', // Stores role array (e.g. [1, 4])
+        'user_type_ids',
     ];
 
     /**
-     * Attribute casting for automated JSON handling and Date objects.
+     * Attribute casting.
      */
     protected $casts = [
         'id'             => 'integer',
@@ -56,58 +41,56 @@ class User extends Model
         'region_id'      => 'integer',
         'status_id'      => 'integer',
         'email_verified' => 'boolean',
-        'date_created'   => 'datetime',
+        'created_at'     => 'datetime',
+        'updated_at'     => 'datetime',
         'user_last_log'  => 'datetime',
-        'timestamp'      => 'datetime',
-        'user_type_ids'  => 'array', // Automatically handles json_encode/decode
+        'user_type_ids'  => 'array',
     ];
-
-    /**
-     * Mapping legacy timestamp names to Eloquent defaults.
-     */
-    const CREATED_AT = 'date_created';
-    const UPDATED_AT = 'timestamp';
 
     // ============================================================
     // Relationships
     // ============================================================
 
     /**
-     * Link to the Country model.
-     * Maps users.country_id -> countries.id
+     * Country relationship.
      */
     public function country(): BelongsTo
     {
-        return $this->belongsTo(Country::class, 'country_id', 'id');
+        return $this->belongsTo(Country::class);
     }
 
     /**
-     * Link to the Region model.
-     * Maps users.region_id -> regions.id
+     * Region relationship.
      */
     public function region(): BelongsTo
     {
-        return $this->belongsTo(Region::class, 'region_id', 'id');
+        return $this->belongsTo(Region::class);
     }
 
     // ============================================================
-    // Accessors & Logic
+    // Accessors
     // ============================================================
 
     /**
-     * Virtual attribute for $user->full_name
+     * Full name accessor.
      */
     public function getFullNameAttribute(): string
     {
         return trim("{$this->first_name} {$this->last_name}");
     }
 
+    // ============================================================
+    // User Types
+    // ============================================================
+
     /**
-     * Helper to check for a specific role/type.
-     * Admin = 1, Registered = 2, Staff = 3, Landlord = 4, Tenant = 5, Agent = 6
+     * Check if user has a specific type.
+     *
+     * Admin = 1
+     * Inspector = 2
      */
     public function hasType(int $typeId): bool
     {
-        return is_array($this->user_type_ids) && in_array($typeId, $this->user_type_ids);
+        return in_array($typeId, $this->user_type_ids ?? [], true);
     }
 }
