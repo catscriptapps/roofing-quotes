@@ -57,6 +57,9 @@ function resetUsersTable(): array
             [
                 'first_name' => 'Cat',
                 'last_name' => 'Nduanya',
+                'country_id' => 39,
+                'region_id' => 1,
+                'city' => 'Barrie',
                 'email' => 'mindofcat@hotmail.com',
                 'password' => password_hash('123xxx#A', PASSWORD_DEFAULT),
                 'status_id' => 1,
@@ -68,6 +71,9 @@ function resetUsersTable(): array
             [
                 'first_name' => 'Joel',
                 'last_name' => 'Davis',
+                'country_id' => 39,
+                'region_id' => 1,
+                'city' => 'Barrie',
                 'email' => 'joel@unitedroofingbarrie.com',
                 'password' => password_hash('123456#', PASSWORD_DEFAULT),
                 'status_id' => 1,

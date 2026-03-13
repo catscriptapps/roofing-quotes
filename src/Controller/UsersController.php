@@ -69,7 +69,7 @@ class UsersController
         $totalFiltered = $builder->count();
 
         // 2. Apply limit, offset, and sort
-        $users = $builder->orderBy('users.date_created', 'desc')
+        $users = $builder->orderBy('users.created_at', 'desc')
             ->offset($offset)
             ->limit($perPage)
             ->get();
@@ -120,7 +120,7 @@ class UsersController
 
         // Encoding ID for security
         $rowItem['encoded_id'] = IdEncoder::encode((int)$user->id);
-        $rowItem['created_at_formatted'] = $user->date_created ? $user->date_created->format('M j, Y') : 'N/A';
+        $rowItem['created_at_formatted'] = $user->created_at ? $user->created_at->format('M j, Y') : 'N/A';
 
         $path = __DIR__ . '/../../resources/views/components/users/data-row.php';
 

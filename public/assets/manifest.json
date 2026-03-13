@@ -118,16 +118,6 @@
       "_table-search.min.js"
     ]
   },
-  "resources/js/pages/gonachi-page.js": {
-    "file": "js/gonachi-page.min.js",
-    "name": "gonachi-page",
-    "src": "resources/js/pages/gonachi-page.js",
-    "isEntry": true,
-    "imports": [
-      "_home-events.min.js",
-      "_animations.min.js"
-    ]
-  },
   "resources/js/pages/history-page.js": {
     "file": "js/history-page.min.js",
     "name": "history-page",
@@ -187,6 +177,16 @@
       "_form-validator.min.js",
       "_spinner-utils.min.js",
       "_toast.min.js"
+    ]
+  },
+  "resources/js/pages/roofing-reports-page.js": {
+    "file": "js/roofing-reports-page.min.js",
+    "name": "roofing-reports-page",
+    "src": "resources/js/pages/roofing-reports-page.js",
+    "isEntry": true,
+    "imports": [
+      "_home-events.min.js",
+      "_animations.min.js"
     ]
   },
   "resources/js/pages/users-page.js": {

@@ -83,7 +83,7 @@ $primaryRole = 'User Profile';
                 </h1>
 
                 <p class="text-lg text-gray-500 dark:text-gray-400 font-medium mb-4">
-                    Member since <?= $user->date_created->format('M Y') ?>
+                    Member since <?= $user->created_at->format('M Y') ?>
                 </p>
 
                 <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-8">

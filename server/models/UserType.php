@@ -26,7 +26,7 @@ class UserType extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'user_type', // e.g., 'Realtor', 'Contractor', 'Individual'
+        'user_type', // e.g., 'Admin', 'Inspector'
     ];
 
     /**
