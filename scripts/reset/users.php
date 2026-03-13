@@ -51,6 +51,8 @@ function resetUsersTable(): array
         $messages[] = "created {$tableName} table";
 
         // 3. Seed default users
+        $now = date('Y-m-d H:i:s');
+
         User::insert([
             [
                 'first_name' => 'Cat',
@@ -60,8 +62,8 @@ function resetUsersTable(): array
                 'status_id' => 1,
                 'user_type_ids' => json_encode([1, 2]),
                 'email_verified' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
             [
                 'first_name' => 'Joel',
@@ -71,8 +73,8 @@ function resetUsersTable(): array
                 'status_id' => 1,
                 'user_type_ids' => json_encode([1, 2]),
                 'email_verified' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
         ]);
 
