@@ -24,6 +24,21 @@ function json_response(array $data, int $code = 200): void
 function log_api_call(string $path, int $status, string $method, ?string $error = null): void {}
 
 /**
+ * Generates a unique, incrementing quote number in the format DCU-QTYY-XXXX.
+ * Uses the Counter model to ensure numbers are never reused after deletion.
+ */
+function generateQuoteNumber(): string
+{
+    $yearPrefix = date('y'); // e.g., "26"
+    $type = 'quote';
+
+    $counter = \App\Models\Counter::where('type', $type)->where('year', $yearPrefix)->first();
+    $nextNumber = ($counter) ? $counter->last_value + 1 : 1;
+
+    return "DCU-QT{$yearPrefix}-" . str_pad((string)$nextNumber, 4, '0', STR_PAD_LEFT);
+}
+
+/**
  * Returns the asset base for either DEV or PRODUCTION.
  */
 function getAssetBase()

@@ -52,6 +52,9 @@ $messages = array_merge($messages, resetPasswordResetsTable());
 require_once __DIR__ . '/../../scripts/reset/messages.php';
 $messages = array_merge($messages, resetMessagesTable());
 
+require_once __DIR__ . '/../../scripts/reset/counters.php';
+$messages = array_merge($messages, resetCountersTable());
+
 // --- RE-ENABLE FOREIGN KEY CHECKS ---
 Capsule::schema()->enableForeignKeyConstraints();
 
