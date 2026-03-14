@@ -8,7 +8,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Modernized Region Model for Gonachi
+ * Modernized Region Model
  * Table: regions
  */
 class Region extends Model

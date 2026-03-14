@@ -75,7 +75,7 @@ export async function loadPartial(url, pushState = true, clickedLink = null) {
     if (!response.ok) throw new Error(`Failed to load ${url}`);
 
     const html = await response.text();
-    const appName = window.APP_CONFIG?.appName || 'Gonachi';
+    const appName = window.APP_CONFIG?.appName || 'Roofing Quotes';
     
     // 1. Title Sync Logic
     // Grab title from clicked link OR find the matching nav link (for popstate/back button)

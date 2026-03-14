@@ -13,7 +13,7 @@ try {
     if ($method === 'GET') {
         $countryId = isset($_GET['country_id']) ? intval($_GET['country_id']) : null;
 
-        // Optional: Force a countryId requirement for Gonachi
+        // Optional: Force a countryId requirement
         if (!$countryId) {
             json_response([
                 'success' => false,

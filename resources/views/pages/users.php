@@ -14,7 +14,7 @@ $userRows = $GLOBALS['userRows'] ?? '';
         <div class="flex-1">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-sans">Users</h1>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                A list of all Gonachi users including their location, account status, and professional roles.
+                A list of all users including their location, account status, and professional roles.
             </p>
         </div>
 

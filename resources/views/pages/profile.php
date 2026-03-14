@@ -185,7 +185,7 @@ $primaryRole = 'User Profile';
                 class="bg-red-50 dark:bg-red-500/5 rounded-[2.5rem] p-8 border border-red-100 dark:border-red-500/10 text-center"
                 style="display: <?= $hasAvatar ? 'block' : 'none'; ?>;">
                 <h4 class="text-red-600 dark:text-red-400 font-black uppercase text-[10px] tracking-widest mb-4">Media Control</h4>
-                <p class="text-xs text-red-500/70 mb-6 font-medium">Remove your profile image from the Gonachi cloud servers.</p>
+                <p class="text-xs text-red-500/70 mb-6 font-medium">Remove your profile image.</p>
                 <button id="delete-avatar-btn"
                     data-action="delete-avatar"
                     data-id="<?= IdEncoder::encode($user->id); ?>"

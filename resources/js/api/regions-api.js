@@ -1,7 +1,7 @@
 // /resources/js/api/regions-api.js
 
 /**
- * Fetches regions filtered by country - Gonachi Edition
+ * Fetches regions filtered by country
  * Maps API response to standardized JS objects based on Region.php model.
  */
 export async function fetchRegions(countryId = 1) {

@@ -48,7 +48,7 @@ function resetCountriesTable(): array
             $count++;
         }
 
-        $messages[] = "successfully imported $count countries into Gonachi.";
+        $messages[] = "successfully imported $count countries.";
     } catch (\Throwable $e) {
         $messages[] = "countries table error: " . $e->getMessage();
     } finally {

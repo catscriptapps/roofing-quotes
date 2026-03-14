@@ -31,7 +31,7 @@ function resetRegionsTable(): array
                 ->onDelete('cascade');
         });
 
-        $messages[] = "created modernized 'regions' table structure for Gonachi.";
+        $messages[] = "created modernized 'regions' table structure.";
 
         // 3. LEGACY DATA ARRAY
         // Format: [id, region, country_id]

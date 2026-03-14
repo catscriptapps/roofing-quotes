@@ -5,7 +5,7 @@ import { initProfileAvatar } from '../utils/profile/profile-avatar.js';
 import { AnimationEngine } from '../utils/animations';
 
 /**
- * Initialize the Profile page JS with Gonachi animations
+ * Initialize the Profile page JS with animations
  */
 export function init() {
     // 1. Fire AOS to animate the new profile cards and hero section

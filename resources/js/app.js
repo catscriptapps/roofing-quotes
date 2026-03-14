@@ -63,7 +63,7 @@ async function loadPageManifest() {
  * Sub-folder aware: Strips the app's base path before matching segments.
  */
 async function initPageScript(urlPathname) {
-    // 1. Get the base path string (e.g., "/gonachi" or "https://site.com/gonachi")
+    // 1. Get the base path string (e.g., "/catscript-apps" or "https://site.com/catscript-apps")
     let baseUrl = window.APP_CONFIG.baseUrl || '';
     
     // 2. Extract just the pathname if it's a full URL, otherwise use as is
@@ -75,7 +75,7 @@ async function initPageScript(urlPathname) {
         }
     }
     
-    // Clean trailing slashes so "/gonachi/" becomes "/gonachi"
+    // Clean trailing slashes so "/catscript-apps/" becomes "/catscript-apps"
     const cleanBase = baseUrl.replace(/\/$/, "");
     
     // 3. Subtract the base from the current path

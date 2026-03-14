@@ -48,8 +48,6 @@ $getCategoryIcon = function ($category) use ($icons) {
     }
 </style>
 
-<title>Dashboard | <?= htmlspecialchars($appName ?? 'Gonachi') ?></title>
-
 <div class="space-y-10 font-sans pb-10">
 
     <div class="animate-in fade-in slide-in-from-top-10 duration-1000 fill-mode-both">

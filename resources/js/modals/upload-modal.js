@@ -188,7 +188,7 @@ export function createUploadHandler(endpointUrl, context, onComplete, concurrenc
   let items = [];
   const pool = new WorkerPool(concurrency);
   const BATCH_SIZE = 20; // Server Safety Limit
-  const MAX_ALLOWED = options.maxFiles || 999; // Gonachi Limit Enforcement
+  const MAX_ALLOWED = options.maxFiles || 999; // Limit Enforcement
 
   const fileInput = modalEl.querySelector('[data-file-input]');
   const dropZone = modalEl.querySelector('[data-drop-zone]');

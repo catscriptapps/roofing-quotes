@@ -1,7 +1,7 @@
 // /resources/js/forms/user-form.js
 
 /**
- * Modern, sleek shared form renderer for Users - Gonachi Edition 💎
+ * Modern, sleek shared form renderer for Users
  * Colors: Primary (Orange), Secondary (Navy)
  */
 export function userForm({

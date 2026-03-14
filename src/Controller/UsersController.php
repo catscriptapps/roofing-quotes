@@ -48,7 +48,7 @@ class UsersController
         $perPage = 100; // Keeping your 100 default
         $offset = ($page - 1) * $perPage;
 
-        // Standardized eager loading for Gonachi geography
+        // Standardized eager loading for geography
         $builder = User::with(['country', 'region'])
             ->leftJoin('countries', 'users.country_id', '=', 'countries.id')
             ->leftJoin('regions', 'users.region_id', '=', 'regions.id')

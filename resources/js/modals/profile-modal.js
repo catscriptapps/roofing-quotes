@@ -35,7 +35,7 @@ export function initProfileModal() {
             // your modal needs to populate the fields correctly.
             await openEditUserModal(profileEditBtn);
         } catch (error) {
-            console.error('Gonachi Modal Error:', error);
+            console.error('Modal Error:', error);
         } finally {
             // Restore button state
             profileEditBtn._isProcessing = false;

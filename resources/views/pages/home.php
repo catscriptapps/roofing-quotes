@@ -132,7 +132,7 @@ declare(strict_types=1);
 
             <a href="<?= $baseUrl ?>login"
                 class="inline-block px-16 py-6 bg-secondary-900 dark:bg-white text-white dark:text-secondary-950 font-black rounded-2xl hover:bg-primary-500 dark:hover:bg-primary-500 dark:hover:text-white transition-all text-xl shadow-xl">
-                Start Inspected Now
+                Launch <?= $appName ?>
             </a>
         </section>
 

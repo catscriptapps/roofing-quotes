@@ -27,7 +27,7 @@ class AuthService
 
     /**
      * Check if the user has access to a specific app.
-     * In Gonachi, 'Users' is restricted to Admins (Type 1) only.
+     * 'Users' is restricted to Admins (Type 1) only.
      */
     public static function hasAccess(string $appName): bool
     {
