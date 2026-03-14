@@ -12,12 +12,13 @@ $messages = [];
 // Disable checks
 Capsule::schema()->disableForeignKeyConstraints();
 
-// DROP EVERYTHING (No creation yet) -  We need to drop the child tables first
-
+// --- 1. DROP EVERYTHING ---
+// Added 'quotes' here to clean up before recreation
+Capsule::schema()->dropIfExists('quotes'); 
 Capsule::schema()->dropIfExists('recent_activities');
 Capsule::schema()->dropIfExists('users');
 
-// NOW START THE RESET SCRIPTS (Creation Phase) - Start with the Parent (Users)
+// --- 2. CREATION PHASE: PARENTS ---
 
 require_once __DIR__ . '/../../scripts/reset/user-types.php';
 $messages = array_merge($messages, resetUserTypesTable());
@@ -25,24 +26,7 @@ $messages = array_merge($messages, resetUserTypesTable());
 require_once __DIR__ . '/../../scripts/reset/users.php';
 $messages = array_merge($messages, resetUsersTable());
 
-// 4. NOW CREATE THE CHILDREN
-
-require_once __DIR__ . '/../../scripts/reset/recent-activities.php';
-$messages = array_merge($messages, resetRecentActivitiesTable());
-
-require_once __DIR__ . '/../../scripts/reset/faqs.php';
-$messages = array_merge($messages, resetFaqsTable());
-
-
-// --- AUTHENTICATION & PARENT TABLES ---
-
-require_once __DIR__ . '/../../scripts/reset/password-resets.php';
-$messages = array_merge($messages, resetPasswordResetsTable());
-
-// --- LOOKUP & SUPPORTING TABLES ---
-
-require_once __DIR__ . '/../../scripts/reset/messages.php';
-$messages = array_merge($messages, resetMessagesTable());
+// --- 3. LOOKUP & SUPPORTING TABLES ---
 
 require_once __DIR__ . '/../../scripts/reset/countries.php';
 $messages = array_merge($messages, resetCountriesTable());
@@ -50,6 +34,23 @@ $messages = array_merge($messages, resetCountriesTable());
 require_once __DIR__ . '/../../scripts/reset/regions.php';
 $messages = array_merge($messages, resetRegionsTable());
 
+// --- 4. FEATURE TABLES (CHILDREN) ---
+
+// Place it here: After users, countries, and regions are ready
+require_once __DIR__ . '/../../scripts/reset/quotes.php';
+$messages = array_merge($messages, resetQuotesTable());
+
+require_once __DIR__ . '/../../scripts/reset/recent-activities.php';
+$messages = array_merge($messages, resetRecentActivitiesTable());
+
+require_once __DIR__ . '/../../scripts/reset/faqs.php';
+$messages = array_merge($messages, resetFaqsTable());
+
+require_once __DIR__ . '/../../scripts/reset/password-resets.php';
+$messages = array_merge($messages, resetPasswordResetsTable());
+
+require_once __DIR__ . '/../../scripts/reset/messages.php';
+$messages = array_merge($messages, resetMessagesTable());
 
 // --- RE-ENABLE FOREIGN KEY CHECKS ---
 Capsule::schema()->enableForeignKeyConstraints();
