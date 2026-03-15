@@ -48,7 +48,7 @@ export function initViewUser() {
             combinedLocEl.textContent = `${city}, ${region} (${country})`;
         }
 
-// 3. User Roles (Account Classifications)
+        // 3. User Roles (Account Classifications)
         const rolesContainer = document.getElementById('view-user-roles-container');
         if (rolesContainer) {
             try {
