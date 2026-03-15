@@ -8,7 +8,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Eloquent Counter model to track sequential numbers (e.g., Invoices)
+ * Eloquent Counter model to track sequential numbers (e.g., Quotes)
  */
 class Counter extends Model
 {

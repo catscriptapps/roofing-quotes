@@ -30,6 +30,7 @@ function resetQuotesTable(): array
 
             // Location Details
             $table->text('property_address');
+            $table->string('city', 255)->index();
             $table->unsignedInteger('country_id')->index();
             $table->unsignedInteger('region_id')->index();
             $table->string('postal_code', 20)->nullable();

@@ -26,6 +26,7 @@ class Quote extends Model
         'quote_number',
         'orig_user_id',
         'property_address',
+        'city',
         'country_id',
         'region_id',
         'postal_code',
@@ -45,7 +46,7 @@ class Quote extends Model
         return match ($this->status_id) {
             self::STATUS_DRAFT  => 'Draft',
             self::STATUS_POSTED => 'Posted',
-            default            => 'Unknown',
+            default             => 'Unknown',
         };
     }
 
