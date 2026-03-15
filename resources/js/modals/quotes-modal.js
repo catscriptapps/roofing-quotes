@@ -4,7 +4,6 @@ import { Modal } from '../factories/modal-factory.js';
 import { quoteForm } from '../forms/quote-form.js';
 import { fetchRegions } from '../api/regions-api.js';
 import { fetchCountries } from '../api/countries-api.js';
-import { enableDynamicRegionLoading } from '../components/regions-component.js';
 import { handleQuoteFormSubmission } from '../utils/quotes/form-submit.js';
 
 let quoteModal = null;
@@ -16,16 +15,13 @@ function initFormFeatures(formId, mode, modalInstance) {
     const form = document.getElementById(formId);
     if (!form) return;
 
-    // 1. Handle Submission (API calls, UI states, Red spinners)
+    // Handle Submission with FormData support for PDF uploads
     handleQuoteFormSubmission(form, mode, modalInstance);
-    
-    // 2. Setup Dynamic Region dropdowns (e.g., switch provinces if country changes)
-    enableDynamicRegionLoading(formId);
 }
 
 // --- Add Quote ---
 async function openAddQuoteModal() {
-    // Defaulting to Canada (1) and Ontario (1) for convenience in the roofing project
+    // Defaulting to Canada (1) and Ontario (1) for Roofing Quotes
     const defaultCountryId = 1; 
     const [countries, regions] = await Promise.all([
         fetchCountries(),
@@ -46,7 +42,7 @@ async function openAddQuoteModal() {
             countryId: defaultCountryId,
             regionId: 1 // Ontario
         }),
-        size: 'lg',
+        size: 'md', // Reduced from lg for a tighter look
         showFooter: false,
     });
 
@@ -71,15 +67,15 @@ export async function openEditQuoteModal(trigger) {
 
     quoteModal = new Modal({
         id: 'edit-quote-modal',
-        title: `Modify Quote: ${data.quoteNumber}`,
+        title: `Modify Quote: ${data.quoteNumber || 'Estimate'}`,
         content: quoteForm({
             mode: 'edit',
             formId: 'quotes-edit-form',
-            quoteNumber: data.quoteNumber,
-            address: data.address,
+            // Mapping dataset to the refined quoteForm property names
+            propertyAddress: data.propertyAddress || data.address, 
             city: data.city,
             postalCode: data.postalCode,
-            accessCode: data.accessCode,
+            pdfFileName: data.pdfFileName,
             countryId: countryId,
             regionId: parseInt(data.regionId || '1'),
             statusId: parseInt(data.statusId || '1'),
@@ -88,7 +84,7 @@ export async function openEditQuoteModal(trigger) {
             buttonLabel: 'Update Quote',
             encodedId: data.encodedId
         }),
-        size: 'lg',
+        size: 'md', // Reduced from lg
         showFooter: false,
     });
 
@@ -101,7 +97,7 @@ export function initQuotesModal() {
     if (listenersAttached) return;
 
     document.addEventListener('click', (e) => {
-        // Handle Add Button (Red "New Quote" button)
+        // Handle Add Button
         const addBtn = e.target.closest('#add-quote-btn');
         if (addBtn) {
             e.preventDefault();
@@ -109,17 +105,16 @@ export function initQuotesModal() {
             return;
         }
 
-        // Handle Edit Button (Modify Quote action)
+        // Handle Edit Button (from Table or View Modal)
         const editBtn = e.target.closest('.edit-quote-btn') || e.target.closest('#view-quote-edit-btn');
         
         if (editBtn) {
             e.preventDefault();
             e.stopPropagation(); 
             
-            // If we are coming from the View Modal, close it first
+            // Close the View Detail modal if it's open before showing Edit
             const viewModalElement = document.getElementById('view-quote-modal');
             if (viewModalElement && !viewModalElement.classList.contains('hidden')) {
-                // Assuming you have a close trigger or direct class manipulation
                 viewModalElement.classList.add('hidden'); 
             }
 

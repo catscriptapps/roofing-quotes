@@ -10,6 +10,10 @@
     "file": "css/app.min2.css",
     "src": "_app.min2.css"
   },
+  "_countries-api.min.js": {
+    "file": "js/countries-api.min.js",
+    "name": "countries-api"
+  },
   "_delete-factory.min.js": {
     "file": "js/delete-factory.min.js",
     "name": "delete-factory"
@@ -34,6 +38,7 @@
     "name": "profile-modal",
     "imports": [
       "_modal-factory.min.js",
+      "_countries-api.min.js",
       "_form-validator.min.js",
       "_spinner-utils.min.js",
       "_delete-factory.min.js"
@@ -41,11 +46,18 @@
   },
   "_spa-router.min.js": {
     "file": "js/spa-router.min.js",
-    "name": "spa-router"
+    "name": "spa-router",
+    "imports": [
+      "_spinner.min.js"
+    ]
   },
   "_spinner-utils.min.js": {
     "file": "js/spinner-utils.min.js",
     "name": "spinner-utils"
+  },
+  "_spinner.min.js": {
+    "file": "js/spinner.min.js",
+    "name": "spinner"
   },
   "_table-search.min.js": {
     "file": "js/table-search.min.js",
@@ -72,6 +84,7 @@
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
+      "_spinner.min.js",
       "_spa-router.min.js",
       "_modal-factory.min.js",
       "_form-validator.min.js",
@@ -165,8 +178,25 @@
       "_delete-factory.min.js",
       "_animations.min.js",
       "_modal-factory.min.js",
+      "_countries-api.min.js",
       "_form-validator.min.js",
-      "_spinner-utils.min.js"
+      "_spinner-utils.min.js",
+      "_spinner.min.js"
+    ]
+  },
+  "resources/js/pages/quotes-page.js": {
+    "file": "js/quotes-page.min.js",
+    "name": "quotes-page",
+    "src": "resources/js/pages/quotes-page.js",
+    "isEntry": true,
+    "imports": [
+      "_modal-factory.min.js",
+      "_countries-api.min.js",
+      "_form-validator.min.js",
+      "_spinner.min.js",
+      "_delete-factory.min.js",
+      "_toast.min.js",
+      "_table-search.min.js"
     ]
   },
   "resources/js/pages/reset-password-page.js": {
@@ -201,6 +231,7 @@
       "_toast.min.js",
       "_table-search.min.js",
       "_modal-factory.min.js",
+      "_countries-api.min.js",
       "_form-validator.min.js",
       "_spinner-utils.min.js"
     ]
