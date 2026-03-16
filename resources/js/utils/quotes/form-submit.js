@@ -3,6 +3,7 @@
 import { FormValidator } from '../../utils/form-validator.js';
 import { showSpinner, hideSpinner } from '../../ui/spinner.js';
 import { updateCount } from '../../components/table-pagination-count.js';
+import { showToast } from '../../ui/toast.js';
 
 /**
  * Maps form data to a FormData object for Roofing Quotes (Supports Files)
@@ -47,25 +48,34 @@ export function handleQuoteFormSubmission(
 
     const originalLabel = submitBtn.innerHTML;
 
+    // --- PDF Type Validation (Instant Feedback) ---
+    const fileInput = form.querySelector('input[type="file"][name="pdf_file"]');
+    fileInput?.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (file && file.type !== 'application/pdf') {
+            showToast('Only PDF files are allowed.', 'error');
+            fileInput.value = ''; // Clear the invalid selection
+        }
+    });
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // 1. Basic field validation (Address, City, etc.)
         if (!validator.validateForEmptyFields(e)) return;
 
-        // 2. Custom PDF Validation for "Add" mode
-    //if (mode === 'add') {
-        const fileInput = form.querySelector('input[type="file"][name="pdf_file"]');
-        if (!fileInput || fileInput.files.length === 0) {
-            // Show a quick error in the apiMsg area
-            apiMsg.innerHTML = `
-                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl font-bold text-sm mt-2 flex items-center gap-2">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    Please select a PDF quote document to continue.
-                </div>
-            `;
-            return; // Stop submission
+        // 2. Strict PDF Requirement for "Add" mode
+        if (mode === 'add') {
+            if (!fileInput || fileInput.files.length === 0) {
+                apiMsg.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl font-bold text-sm mt-2 flex items-center gap-2">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        Please select a PDF quote document to continue.
+                    </div>
+                `;
+                return; 
+            }
         }
-    //}
 
         // UI Feedback: Show global overlay and disable button
         showSpinner(); 
@@ -76,15 +86,13 @@ export function handleQuoteFormSubmission(
         try {
             const formData = getPayload(form);
             
-            // Method spoofing for PUT (Laravel/Eloquent often prefers POST with _method PATCH/PUT for files)
+            // Method spoofing for PUT/PATCH support in PHP
             if (mode === 'edit') {
                 formData.append('_method', 'PUT');
             }
 
             const baseUrl = window.APP_CONFIG?.baseUrl || '/';
             
-            // IMPORTANT: No 'Content-Type' header here. 
-            // The browser will automatically set 'multipart/form-data' with the correct boundary.
             const response = await fetch(`${baseUrl}api/quotes`, {
                 method: 'POST',
                 body: formData,
@@ -102,7 +110,6 @@ export function handleQuoteFormSubmission(
                         const existingRow = document.querySelector(`tr[data-encoded-id="${form.dataset.encodedId}"]`);
                         if (existingRow) existingRow.outerHTML = result.rowHtml;
                     } else if (result.rowHtml) {
-                        // Remove empty state if it exists before adding first row
                         const emptyRow = tbody.querySelector('.empty-state-row');
                         if (emptyRow) emptyRow.remove();
                         
@@ -137,7 +144,7 @@ export function handleQuoteFormSubmission(
             console.error('Quote Submission Error:', err);
             apiMsg.innerHTML = `<div class="bg-red-50 text-red-700 px-4 py-3 rounded-2xl font-bold text-sm mt-2">Connection error.</div>`;
         } finally {
-            hideSpinner(); // Hide global overlay
+            hideSpinner(); 
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalLabel;

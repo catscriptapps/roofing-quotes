@@ -138,6 +138,11 @@ class QuotesController
     {
         $query = $_GET['q'] ?? '';
         
+        // Pagination logic
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $perPage = 15; // Set your preferred items per page
+        $offset = ($page - 1) * $perPage;
+
         $builder = Quote::with([
             'owner.country', 
             'owner.region', 
@@ -145,6 +150,7 @@ class QuotesController
             'region'
         ]);
 
+        // Search Filter
         if (!empty($query)) {
             $builder->where(function ($q) use ($query) {
                 $term = '%' . trim($query) . '%';
@@ -160,31 +166,48 @@ class QuotesController
             });
         }
 
-        $quotes = $builder->orderBy('created_at', 'desc')->get();
+        // Get total count for metadata before applying limit/offset
+        $totalRecords = (clone $builder)->count();
 
-        if (isset($_GET['q']) || (isset($_GET['limit']) && $_GET['limit'] === 'all')) {
+        // Fetch paginated results
+        $quotes = $builder->orderBy('created_at', 'desc')
+                          ->offset($offset)
+                          ->limit($perPage)
+                          ->get();
+
+        // Handle AJAX/API requests (Search or Infinite Scroll)
+        if (isset($_GET['q']) || isset($_GET['page']) || (isset($_GET['limit']) && $_GET['limit'] === 'all')) {
             header('Content-Type: application/json');
 
-            $data = isset($_GET['q'])
-                ? array_map(fn($q) => ['rowHtml' => self::renderRow($q)], $quotes->all())
-                : $quotes->all();
+            // Map rows to HTML if it's a search or scroll request
+            $data = array_map(fn($q) => [
+                'rowHtml' => self::renderRow($q),
+                'encoded_id' => $q->encoded_id // Useful for JS side-checks
+            ], $quotes->all());
 
             echo json_encode([
                 'success' => true,
                 'data' => $data,
-                'meta' => ['total' => Quote::count()]
+                'meta' => [
+                    'total' => $totalRecords,
+                    'currentPage' => $page,
+                    'perPage' => $perPage,
+                    'hasMore' => ($offset + $perPage) < $totalRecords
+                ]
             ]);
             exit;
         }
 
+        // Standard Page Load (PHP Rendering)
         $html = '';
         foreach ($quotes as $quote) {
             $html .= self::renderRow($quote);
         }
 
+        // Global variables for the view
         $GLOBALS['quoteRows'] = $html;
         $GLOBALS['title'] = "Quotes";
-        $GLOBALS['totalCount'] = $quotes->count();
+        $GLOBALS['totalCount'] = $totalRecords;
     }
 
     /**
