@@ -45,23 +45,27 @@ $quoteRows = $GLOBALS['quoteRows'] ?? '';
             <table class="w-full divide-y divide-gray-200 dark:divide-gray-800">
                 <thead class="bg-gray-50 dark:bg-gray-800/50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest w-full md:w-[45%]">
+                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest w-full lg:w-[35%]">
                             Property Details & Quote #
                         </th>
                         
-                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden md:table-cell w-[15%]">
+                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[15%]">
+                            Inspector
+                        </th>
+
+                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden md:table-cell w-[12%]">
                             Access Code
                         </th>
                         
-                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[15%]">
-                            Created
+                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[18%]">
+                            Timeline
                         </th>
                         
-                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest w-[100px]">
+                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[10%]">
                             Status
                         </th>
                         
-                        <th class="relative px-6 py-4 text-right w-24">
+                        <th class="relative px-6 py-4 text-right w-24 hidden lg:table-cell">
                             <span class="sr-only">Actions</span>
                         </th>
                     </tr>
