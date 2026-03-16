@@ -52,6 +52,21 @@ export function handleQuoteFormSubmission(
         
         if (!validator.validateForEmptyFields(e)) return;
 
+        // 2. Custom PDF Validation for "Add" mode
+    //if (mode === 'add') {
+        const fileInput = form.querySelector('input[type="file"][name="pdf_file"]');
+        if (!fileInput || fileInput.files.length === 0) {
+            // Show a quick error in the apiMsg area
+            apiMsg.innerHTML = `
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl font-bold text-sm mt-2 flex items-center gap-2">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    Please select a PDF quote document to continue.
+                </div>
+            `;
+            return; // Stop submission
+        }
+    //}
+
         // UI Feedback: Show global overlay and disable button
         showSpinner(); 
         submitBtn.disabled = true;
