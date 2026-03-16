@@ -59,5 +59,11 @@ Thumbs.db
 *.jpg
 *.jpeg
 *.gif
-server/storage/inspections/YTFFEM.pdf
+
+# Server storage
 server/storage/
+
+# PDFs and images and videos
+public/pdfs/
+public/images/
+public/videos/
