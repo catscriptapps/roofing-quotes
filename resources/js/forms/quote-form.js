@@ -77,7 +77,7 @@ export function quoteForm({
             <label for="${idPrefix}-pdf" class="block text-[10px] font-black uppercase tracking-widest text-red-600 mb-2 ml-1">
                 ${mode === 'edit' ? 'Update Quote PDF' : 'Attach Quote PDF'}
             </label>
-            <input type="file" id="${idPrefix}-pdf" name="pdf" accept=".pdf"
+            <input type="file" id="${idPrefix}-pdf" name="pdf_file" accept=".pdf"
                 class="block w-full text-xs text-gray-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-xl file:border-0

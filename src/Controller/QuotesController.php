@@ -9,10 +9,102 @@ use App\Models\Quote;
 use App\Models\Counter;
 use App\Utils\IdEncoder;
 use App\Traits\RecentActivityLogger;
+use Src\Service\PdfUploadService;
 
 class QuotesController
 {
     use RecentActivityLogger;
+
+    protected function getUploadService(): PdfUploadService
+    {
+        // Path updated to public/pdfs/quotes/
+        $path = realpath(__DIR__ . '/../../public/pdfs/quotes/');
+        if (!$path) {
+            $path = __DIR__ . '/../../public/pdfs/quotes/';
+        }
+        return new PdfUploadService($path);
+    }
+
+    /**
+     * Handle Create or Update from Modal
+     */
+    public function save(array $data): array
+    {
+        try {
+            $encodedId = $data['encoded_id'] ?? null;
+            $quoteId = !empty($encodedId) ? IdEncoder::decode($encodedId) : null;
+            $isNew = !$quoteId;
+
+            $quote = $quoteId ? Quote::find($quoteId) : new Quote();
+            if (!$quote) throw new \Exception("Quote record not found.");
+
+            if ($isNew) {
+                $quote->quote_number = generateQuoteNumber();
+                $quote->orig_user_id = (int)($_SESSION['user_id'] ?? 1);
+            }
+
+            // Handle PDF if provided in the full form
+            if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
+                $service = $this->getUploadService();
+                $newFile = $service->upload($_FILES['pdf_file']);
+                if ($newFile) $quote->pdf_file_name = $newFile;
+            }
+
+            $quote->property_address = trim($data['property_address'] ?? '');
+            $quote->city             = trim($data['city'] ?? '');
+            $quote->country_id       = (int)($data['country_id'] ?? 1);
+            $quote->region_id        = (int)($data['region_id'] ?? 1);
+            $quote->postal_code      = strtoupper(trim($data['postal_code'] ?? ''));
+            $quote->access_code      = trim($data['access_code'] ?? '');
+            $quote->status_id        = (int)($data['status_id'] ?? Quote::STATUS_DRAFT);
+
+            if ($quote->save()) {
+                if ($isNew) $this->incrementCounter('quote');
+            }
+
+            $quote = $quote->fresh(['owner.country', 'owner.region', 'country', 'region']);
+            static::logActivity(($isNew ? "Created" : "Updated") . " Quote #{$quote->quote_number}", 'Quotes');
+
+            return [
+                'success'  => true,
+                'rowHtml'  => self::renderRow($quote),
+                'messages' => ["Quote saved successfully."]
+            ];
+        } catch (\Throwable $e) {
+            return ['success' => false, 'messages' => [$e->getMessage()]];
+        }
+    }
+
+    /**
+     * Handle Quick AJAX PDF Uploads from Table Row
+     */
+    public function uploadPdf(array $data, array $files): array
+    {
+        try {
+            $id = IdEncoder::decode($data['encoded_id'] ?? '');
+            $quote = Quote::find($id);
+            if (!$quote) throw new \Exception("Quote not found.");
+
+            $service = $this->getUploadService();
+            $fileName = $service->upload($files['quote_pdf']);
+
+            if ($fileName) {
+                $quote->pdf_file_name = $fileName;
+                $quote->save();
+
+                static::logActivity("Uploaded PDF for Quote #{$quote->quote_number}", 'Quotes');
+
+                return [
+                    'success' => true,
+                    'rowHtml' => self::renderRow($quote->fresh(['owner', 'country', 'region'])),
+                    'messages' => ["PDF uploaded successfully."]
+                ];
+            }
+            throw new \Exception("Upload failed.");
+        } catch (\Throwable $e) {
+            return ['success' => false, 'messages' => [$e->getMessage()]];
+        }
+    }
 
     /**
      * Handle Delete
@@ -135,109 +227,6 @@ class QuotesController
             return "<tr><td colspan='6' class='p-4 text-red-500'>Render Error: " . $e->getMessage() . "</td></tr>";
         }
         return ob_get_clean();
-    }
-
-    /**
-     * Handle Create or Update
-     */
-    public function save(array $data): array
-    {
-        try {
-            $encodedId = $data['encoded_id'] ?? null;
-            $quoteId = !empty($encodedId) ? IdEncoder::decode($encodedId) : null;
-            $isNew = !$quoteId;
-
-            $quote = $quoteId ? Quote::find($quoteId) : new Quote();
-
-            if (!$quote) throw new \Exception("Quote record not found.");
-
-            if ($isNew) {
-                $quote->quote_number = generateQuoteNumber();
-                $quote->orig_user_id = (int)($_SESSION['user_id'] ?? 1);
-            }
-
-            $quote->property_address = trim($data['property_address'] ?? '');
-            $quote->city             = trim($data['city'] ?? '');
-            $quote->country_id       = (int)($data['country_id'] ?? 1);
-            $quote->region_id        = (int)($data['region_id'] ?? 1);
-            $quote->postal_code      = strtoupper(trim($data['postal_code'] ?? ''));
-            $quote->access_code      = trim($data['access_code'] ?? '');
-            $quote->pdf_file_name    = $data['pdf_file_name'] ?? $quote->pdf_file_name;
-            $quote->status_id        = (int)($data['status_id'] ?? Quote::STATUS_DRAFT);
-
-            if ($quote->save()) {
-                if ($isNew) {
-                    $this->incrementCounter('quote');
-                }
-            }
-
-            $quote = $quote->fresh(['owner.country', 'owner.region', 'country', 'region']);
-
-            $action = $isNew ? "Created" : "Updated";
-            $logMsg = "{$action} Quote #{$quote->quote_number} for property in {$quote->city}";
-            static::logActivity($logMsg, 'Quotes');
-
-            return [
-                'success'  => true,
-                'quote_id' => $quote->quote_id,
-                'rowHtml'  => self::renderRow($quote),
-                'messages' => ["Quote #{$quote->quote_number} saved successfully."]
-            ];
-
-        } catch (\Throwable $e) {
-            static::logActivity("Quote save failure: " . $e->getMessage(), 'Quotes');
-            return ['success' => false, 'messages' => [$e->getMessage()]];
-        }
-    }
-
-    /**
-     * Specialized method for AJAX PDF Uploads from the Data Row
-     */
-    public function uploadPdf(array $data, array $files): array
-    {
-        try {
-            $encodedId = $data['encoded_id'] ?? null;
-            if (!$encodedId) throw new \Exception("Missing Quote ID.");
-            
-            $id = IdEncoder::decode($encodedId);
-            $quote = Quote::find($id);
-            if (!$quote) throw new \Exception("Quote not found.");
-
-            if (!isset($files['quote_pdf']) || $files['quote_pdf']['error'] !== UPLOAD_ERR_OK) {
-                throw new \Exception("Invalid file upload.");
-            }
-
-            $file = $files['quote_pdf'];
-            $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-            
-            if (strtolower($ext) !== 'pdf') {
-                throw new \Exception("Only PDF documents are allowed.");
-            }
-
-            // Clean filename: DCU-QT26-0001.pdf
-            $newFileName = $quote->quote_number . '.pdf';
-            $uploadDir = __DIR__ . '/../../public/uploads/quotes/';
-            
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-
-            if (move_uploaded_file($file['tmp_name'], $uploadDir . $newFileName)) {
-                $quote->pdf_file_name = $newFileName;
-                $quote->save();
-
-                static::logActivity("Uploaded PDF for Quote #{$quote->quote_number}", 'Quotes');
-
-                return [
-                    'success' => true,
-                    'rowHtml' => self::renderRow($quote->fresh(['owner', 'country', 'region'])),
-                    'messages' => ["PDF uploaded successfully."]
-                ];
-            }
-
-            throw new \Exception("Failed to save file to server.");
-
-        } catch (\Throwable $e) {
-            return ['success' => false, 'messages' => [$e->getMessage()]];
-        }
     }
 
     private function incrementCounter(string $type): void

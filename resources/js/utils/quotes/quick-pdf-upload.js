@@ -56,13 +56,15 @@ export function initQuickPdfUpload() {
         activeBtn.innerHTML = '<span class="animate-spin inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full"></span>';
 
         const formData = new FormData();
-        formData.append('pdf', file);
+        // Match the controller's expected key: 'quote_pdf'
+        formData.append('quote_pdf', file); 
         formData.append('encoded_id', encodedId);
         formData.append('_method', 'PATCH'); 
 
         try {
             const baseUrl = window.APP_CONFIG?.baseUrl || '/';
-            const response = await fetch(`${baseUrl}api/quotes/upload-pdf`, {
+            // Remove /upload-pdf, send to the main quotes API
+            const response = await fetch(`${baseUrl}api/quotes`, { 
                 method: 'POST',
                 body: formData,
                 headers: {
