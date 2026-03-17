@@ -107,8 +107,16 @@ export function handleQuoteFormSubmission(
                         const existingRow = document.querySelector(`tr[data-encoded-id="${form.dataset.encodedId}"]`);
                         if (existingRow) existingRow.outerHTML = result.rowHtml;
                     } else {
-                        const emptyRow = tbody.querySelector('.empty-state-row');
-                        if (emptyRow) emptyRow.remove();
+                        // --- IMPROVED CLEANUP ---
+                        // Look for the specific class, OR any row that spans all columns (typical for empty states)
+                        const emptyRow = tbody.querySelector('.empty-state-row') || tbody.querySelector('td[colspan]');
+                        
+                        if (emptyRow) {
+                            // If it's the <td>, we need to remove its parent <tr>
+                            const rowToRemove = emptyRow.tagName === 'TR' ? emptyRow : emptyRow.closest('tr');
+                            if (rowToRemove) rowToRemove.remove();
+                        }
+
                         tbody.insertAdjacentHTML('afterbegin', result.rowHtml);
                     }
                     updateCount('quote', tableSelector, '#quotes-count');

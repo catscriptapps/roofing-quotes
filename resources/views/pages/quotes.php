@@ -72,7 +72,7 @@ $quoteRows = $GLOBALS['quoteRows'] ?? '';
                 </thead>
                 <tbody id="quotes-tbody" class="divide-y divide-gray-200 dark:divide-gray-800 bg-white dark:bg-gray-900">
                     <?php if (empty($quoteRows)): ?>
-                        <tr>
+                        <tr class="empty-state-row">
                             <td colspan="5" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400 font-sans">
                                 <div class="flex flex-col items-center">
                                     <svg class="h-12 w-12 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
