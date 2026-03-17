@@ -71,11 +71,12 @@ export async function openEditQuoteModal(trigger) {
         content: quoteForm({
             mode: 'edit',
             formId: 'quotes-edit-form',
-            // Mapping dataset to the refined quoteForm property names
-            propertyAddress: data.propertyAddress || data.address, 
+            // Corrected mapping: data.address matches your data-row, 
+            // and data.pdfFile matches 'pdf-file' from your PHP
+            propertyAddress: data.address, 
             city: data.city,
             postalCode: data.postalCode,
-            pdfFileName: data.pdfFileName,
+            pdfFileName: data.pdfFile, // This captures 'data-pdf-file'
             countryId: countryId,
             regionId: parseInt(data.regionId || '1'),
             statusId: parseInt(data.statusId || '1'),
@@ -84,7 +85,7 @@ export async function openEditQuoteModal(trigger) {
             buttonLabel: 'Update Quote',
             encodedId: data.encodedId
         }),
-        size: 'md', // Reduced from lg
+        size: 'md',
         showFooter: false,
     });
 

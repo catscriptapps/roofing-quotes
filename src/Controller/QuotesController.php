@@ -43,13 +43,34 @@ class QuotesController
                 $quote->orig_user_id = (int)($_SESSION['user_id'] ?? 1);
             }
 
-            // Handle PDF if provided in the full form
+            /**
+             * INTELLIGENT PDF HANDLING
+             * If editing and no new file is in $_FILES, this block is skipped,
+             * preserving the existing $quote->pdf_file_name.
+             */
             if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
                 $service = $this->getUploadService();
+                
+                // 1. Capture the old filename if we are editing
+                $oldFile = $quote->pdf_file_name;
+
+                // 2. Upload the new file
                 $newFile = $service->upload($_FILES['pdf_file']);
-                if ($newFile) $quote->pdf_file_name = $newFile;
+                
+                if ($newFile) {
+                    $quote->pdf_file_name = $newFile;
+
+                    // 3. Cleanup: If there was an old file, delete it from the disk
+                    if (!$isNew && !empty($oldFile)) {
+                        $oldPath = realpath(__DIR__ . '/../../public/pdfs/quotes/') . DIRECTORY_SEPARATOR . $oldFile;
+                        if (file_exists($oldPath)) {
+                            @unlink($oldPath);
+                        }
+                    }
+                }
             }
 
+            // Standard field mapping
             $quote->property_address = trim($data['property_address'] ?? '');
             $quote->city             = trim($data['city'] ?? '');
             $quote->country_id       = (int)($data['country_id'] ?? 1);
@@ -62,6 +83,7 @@ class QuotesController
                 if ($isNew) $this->incrementCounter('quote');
             }
 
+            // Refresh relations for a clean UI render
             $quote = $quote->fresh(['owner.country', 'owner.region', 'country', 'region']);
             static::logActivity(($isNew ? "Created" : "Updated") . " Quote #{$quote->quote_number}", 'Quotes');
 

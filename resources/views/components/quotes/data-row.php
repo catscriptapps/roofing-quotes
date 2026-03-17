@@ -37,6 +37,15 @@ $quoteDataAttrs = [
     'pdf-file'     => $rowItem['pdf_file_name'] ?? '',
 ];
 
+// Convert the array into a string of data attributes
+$dataAttrString = '';
+foreach ($quoteDataAttrs as $key => $value) {
+    $dataAttrString .= sprintf(' data-%s="%s"', $key, htmlspecialchars((string)$value));
+}
+
+$editClass = 'edit-quote-btn';
+$deleteClass = 'delete-quote-btn';
+
 $statusBadge = match ((int)($rowItem['status_id'] ?? 1)) {
     2       => '<span class="inline-flex items-center rounded-full bg-gray-900 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white border border-black">Posted</span>',
     default => '<span class="inline-flex items-center rounded-full bg-red-50 dark:bg-red-900/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-red-600 border border-red-100 dark:border-red-900/30">Draft</span>'
@@ -45,7 +54,7 @@ $statusBadge = match ((int)($rowItem['status_id'] ?? 1)) {
 $updatedAt = !empty($rowItem['updated_at']) ? date('M j, g:i a', strtotime($rowItem['updated_at'])) : 'N/A';
 ?>
 
-<tr id="quote-row-<?= $rowItem['quote_id'] ?? '0' ?>" 
+<tr id="quote-row-<?= $rowItem['quote_id'] ?? '0' ?>" <?= $dataAttrString ?> 
     class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors group border-b border-gray-100 dark:border-gray-800">
     
     <td class="px-6 py-4">
