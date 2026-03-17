@@ -48,13 +48,13 @@ $quoteRows = $GLOBALS['quoteRows'] ?? '';
                         <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest lg:w-[35%]">
                             Property Details & Quote #
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[15%]">
+                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[22%]">
                             Inspector
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden md:table-cell w-[12%]">
+                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden md:table-cell w-[10%]">
                             Access Code
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[18%]">
+                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[13%]">
                             Timeline
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[10%]">
