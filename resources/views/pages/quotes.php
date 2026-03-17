@@ -1,5 +1,4 @@
 <?php
-// /resources/views/pages/quotes.php
 
 declare(strict_types=1);
 
@@ -40,31 +39,27 @@ $quoteRows = $GLOBALS['quoteRows'] ?? '';
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden">
-        <div class="w-full overflow-x-auto">
-            <table class="w-full divide-y divide-gray-200 dark:divide-gray-800">
+    <div class="bg-white dark:bg-gray-900 shadow-sm rounded-2xl flex flex-col">
+        
+        <div class="w-full overflow-x-auto md:overflow-x-clip border border-gray-200 dark:border-gray-800 rounded-t-2xl no-scrollbar">
+            <table class="w-full divide-y divide-gray-200 dark:divide-gray-800 table-fixed">
                 <thead class="bg-gray-50 dark:bg-gray-800/50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest w-full lg:w-[35%]">
+                        <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest lg:w-[35%]">
                             Property Details & Quote #
                         </th>
-                        
                         <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[15%]">
                             Inspector
                         </th>
-
                         <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden md:table-cell w-[12%]">
                             Access Code
                         </th>
-                        
                         <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[18%]">
                             Timeline
                         </th>
-                        
                         <th class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest hidden lg:table-cell w-[10%]">
                             Status
                         </th>
-                        
                         <th class="relative px-6 py-4 text-right w-24 hidden lg:table-cell">
                             <span class="sr-only">Actions</span>
                         </th>
@@ -73,7 +68,7 @@ $quoteRows = $GLOBALS['quoteRows'] ?? '';
                 <tbody id="quotes-tbody" class="divide-y divide-gray-200 dark:divide-gray-800 bg-white dark:bg-gray-900">
                     <?php if (empty($quoteRows)): ?>
                         <tr class="empty-state-row">
-                            <td colspan="5" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400 font-sans">
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400 font-sans">
                                 <div class="flex flex-col items-center">
                                     <svg class="h-12 w-12 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -89,10 +84,12 @@ $quoteRows = $GLOBALS['quoteRows'] ?? '';
             </table>
         </div>
 
-        <?php 
-            $footerCountName = 'quotes';
-            include __DIR__ . '/../components/ui/footer-count.php'; 
-        ?>
+        <div class="border-x border-b border-gray-200 dark:border-gray-800 rounded-b-2xl bg-white dark:bg-gray-900">
+            <?php 
+                $footerCountName = 'quotes';
+                include __DIR__ . '/../components/ui/footer-count.php'; 
+            ?>
+        </div>
     </div>
 </div>
 
