@@ -6,17 +6,15 @@ import { initDeleteQuote } from '../utils/quotes/delete-quote.js';
 import { enableTableSearch } from '../components/table-search.js';
 import { initViewQuote } from '../utils/quotes/view-quote.js';
 import { initQuoteInfiniteScroll } from '../utils/quotes/infinite-scroll-quotes.js';
-import { initQuickPdfUpload } from '../utils/quotes/quick-pdf-upload.js';
 import { copyToClipboard } from '../utils/globals/copy-to-clipboard.js';
+import { initPDFDownload } from '../utils/quotes/pdf-download.js'; // 1. Import the new logic
 
 /**
  * Initialize the Roofing Quotes page logic.
  */
 export function init() {
-    // 1. Initialize the Create/Edit modal logic (Modify Quote)
     initQuotesModal();
     
-    // 2. Enable the pro AJAX search - Red focus handled via CSS
     enableTableSearch({
         searchInputId: 'quotes-search',
         tbodyId: 'quotes-tbody',
@@ -26,20 +24,16 @@ export function init() {
         addButtonId: 'add-quote-btn'
     });
 
-    // 3. Initialize the delete/archive functionality
     initDeleteQuote();
 
-    // 4. Initial count check for the footer
+    // 2. Initialize the PDF View triggers (The small red circles)
+    initPDFDownload();
+
     updateCount('quote', '#quotes-tbody', '#quotes-count');
     
-    // 5. Initialize the detailed View Modal (The one with Red/Black branding)
     initViewQuote();
 
-    // 6. Initialize Infinite Scroll for performance
     initQuoteInfiniteScroll();
-
-    // 7. Initialize the Quick PDF trigger (the small red button on the table row)
-    initQuickPdfUpload();
 
     copyToClipboard();
 }

@@ -11,7 +11,7 @@ $quoteRows = $GLOBALS['quoteRows'] ?? '';
 <div class="space-y-6 max-w-full overflow-x-hidden">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div class="flex-1">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-sans uppercase italic tracking-tight">Quotes</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-sans">Quotes</h1>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
                 Manage PDF uploads, property details, and tracking for the roofing quotes project.
             </p>

@@ -76,11 +76,25 @@ $statusBadge = match ((int)($rowItem['status_id'] ?? 1)) {
                     <?= $propertyInitial ?>
                 </div>
                 
-                <button type="button" 
-                        class="trigger-quick-pdf absolute -bottom-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center shadow-sm border border-white dark:border-gray-900 transition-all hover:scale-110 <?= $hasPdf ? 'bg-red-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500' ?>"
-                        title="<?= $hasPdf ? 'Replace PDF' : 'Upload PDF' ?>">
-                    <i class="bi <?= $hasPdf ? 'bi-file-earmark-check-fill' : 'bi-file-earmark-plus' ?> text-[10px]"></i>
-                </button>
+                <?php if ($hasPdf): ?>
+                    <button type="button" 
+                            data-encoded-id="<?= $rowItem['encoded_id'] ?? '' ?>"
+                            class="view-pdf-trigger absolute -bottom-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center shadow-sm border border-white dark:border-gray-900 transition-all hover:scale-110 bg-red-600 text-white"
+                            title="View PDF Quote">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+                            <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                <?php else: ?>
+                    <button type="button" 
+                            class="absolute -bottom-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center shadow-sm border border-white dark:border-gray-900 transition-all bg-gray-200 dark:bg-gray-700 text-gray-500"
+                            title="No PDF Available">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                <?php endif; ?>
             </div>
             
             <div class="ml-4 flex-1 min-w-0">

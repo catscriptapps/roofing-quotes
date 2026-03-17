@@ -62,24 +62,39 @@ export function initViewQuote() {
         // 3. Owner detail logic
         modalDetailOwner('quote', data);
 
-        // 4. PDF Link Logic (Using Heroicons)
+        // 4. PDF Proxy Logic (Roofing Quotes)
         const pdfLinkEl = document.getElementById('view-quote-pdf-link');
         const pdfIconContainer = document.getElementById('view-quote-pdf-icon');
-        
+
         if (pdfLinkEl) {
-            if (data.pdfFile && data.pdfFile !== 'null') {
-                pdfLinkEl.href = `${window.APP_CONFIG?.baseUrl || '/'}public/pdfs/quotes/${data.pdfFile}`;
+            // Note: We use the encodedId from trigger.dataset, which matches your table row
+            const encodedId = data.encodedId; 
+
+            if (encodedId && data.pdfFile && data.pdfFile !== 'null') {
+                const base = window.APP_CONFIG?.baseUrl?.replace(/\/+$/, '') ?? '';
+                
+                // Pointing to our secure proxy instead of a public path
+                pdfLinkEl.href = `${base}/api/quotes-pdf?id=${encodeURIComponent(encodedId)}`;
+                pdfLinkEl.target = "_blank"; // Ensure it opens in a new tab
                 pdfLinkEl.textContent = data.pdfFile;
-                pdfLinkEl.classList.add('text-red-400');
+                pdfLinkEl.classList.add('text-red-600', 'hover:underline');
+                
                 if (pdfIconContainer) {
-                    pdfIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-red-500"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>`;
+                    pdfIconContainer.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-red-600">
+                            <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0016.5 9h-1.875a1.875 1.875 0 01-1.875-1.875V5.25A3.75 3.75 0 009 1.5H5.625z" />
+                            <path d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z" />
+                        </svg>`;
                 }
             } else {
-                pdfLinkEl.href = 'javascript';
+                pdfLinkEl.href = '#';
                 pdfLinkEl.textContent = 'No Document Attached';
-                pdfLinkEl.classList.remove('text-red-400');
+                pdfLinkEl.classList.remove('text-red-600');
                 if (pdfIconContainer) {
-                    pdfIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-500"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>`;
+                    pdfIconContainer.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                        </svg>`;
                 }
             }
         }
