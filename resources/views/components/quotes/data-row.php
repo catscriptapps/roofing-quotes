@@ -37,12 +37,6 @@ $quoteDataAttrs = [
     'pdf-file'     => $rowItem['pdf_file_name'] ?? '',
 ];
 
-// Convert the array into a string of data attributes
-$dataAttrString = '';
-foreach ($quoteDataAttrs as $key => $value) {
-    $dataAttrString .= sprintf(' data-%s="%s"', $key, htmlspecialchars((string)$value));
-}
-
 $editClass = 'edit-quote-btn';
 $deleteClass = 'delete-quote-btn';
 
@@ -54,11 +48,12 @@ $statusBadge = match ((int)($rowItem['status_id'] ?? 1)) {
 $updatedAt = !empty($rowItem['updated_at']) ? date('M j, g:i a', strtotime($rowItem['updated_at'])) : 'N/A';
 ?>
 
-<tr id="quote-row-<?= $rowItem['quote_id'] ?? '0' ?>" <?= $dataAttrString ?> 
-    class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors group border-b border-gray-100 dark:border-gray-800">
+<tr id="quote-row-<?= $rowItem['quote_id'] ?? '0' ?>" 
+    data-encoded-id="<?= $rowItem['encoded_id'] ?? '' ?>"
+    class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors group border-b border-gray-100 dark:border-gray-800 font-sans">
     
-    <td class="px-6 py-4">
-        <div class="flex items-start lg:items-center">
+    <td class="px-6 py-4 min-w-0">
+        <div class="flex items-start lg:items-center min-w-0">
             <input type="file" class="hidden quick-pdf-input" accept="application/pdf" data-id="<?= $rowItem['encoded_id'] ?>">
 
             <div class="h-10 w-10 flex-shrink-0 relative">
@@ -74,19 +69,30 @@ $updatedAt = !empty($rowItem['updated_at']) ? date('M j, g:i a', strtotime($rowI
             </div>
             
             <div class="ml-4 flex-1 min-w-0">
-                <div class="text-sm font-bold text-gray-900 dark:text-white truncate max-w-[200px] md:max-w-md" title="<?= htmlspecialchars($fullAddress) ?>">
-                    <?= htmlspecialchars($fullAddress) ?>
-                </div>
-                <div class="flex items-center gap-2 mt-0.5">
-                    <span class="text-xs text-red-600 font-bold tracking-tight">
-                        <?= htmlspecialchars($rowItem['quote_number'] ?? 'PENDING') ?>
-                    </span>
-                    <?php if($hasPdf): ?>
-                        <a href="<?= $assetBase ?>uploads/quotes/<?= $rowItem['pdf_file_name'] ?>" target="_blank" class="text-[10px] text-gray-500 hover:text-red-600 font-black hover:underline flex items-center gap-1 transition-colors uppercase">
-                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5z"/></svg>
-                             View PDF
-                        </a>
-                    <?php endif; ?>
+                <div class="view-quote-trigger cursor-pointer block min-w-0"
+                    <?php foreach ($quoteDataAttrs as $key => $val): ?>
+                    data-<?= $key ?>='<?= htmlspecialchars((string)$val, ENT_QUOTES) ?>'
+                    <?php endforeach; ?>>
+                    
+                    <div class="flex items-center justify-between lg:block">
+                        <div class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-red-600 transition-colors truncate max-w-[200px] md:max-w-md" title="<?= htmlspecialchars($fullAddress) ?>">
+                            <?= htmlspecialchars($fullAddress) ?>
+                        </div>
+                        <div class="lg:hidden flex-shrink-0 ml-2">
+                            <?= $statusBadge ?>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span class="text-xs text-red-600 font-bold tracking-tight">
+                            <?= htmlspecialchars($rowItem['quote_number'] ?? 'PENDING') ?>
+                        </span>
+                        <?php if($hasPdf): ?>
+                            <span class="text-[10px] text-gray-400 font-black uppercase flex items-center gap-1">
+                                <i class="bi bi-file-earmark-pdf"></i> PDF Attached
+                            </span>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <div class="mt-3 lg:hidden flex flex-col gap-3">
@@ -94,7 +100,6 @@ $updatedAt = !empty($rowItem['updated_at']) ? date('M j, g:i a', strtotime($rowI
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tight">
                             By: <?= htmlspecialchars($ownerFullName) ?>
                         </span>
-                        <?= $statusBadge ?>
                         <span class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-[10px] font-mono font-bold text-gray-500 border border-gray-200 dark:border-gray-700">
                             <?= htmlspecialchars($rowItem['access_code'] ?: '----') ?>
                         </span>
