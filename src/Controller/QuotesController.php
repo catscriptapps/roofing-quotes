@@ -38,39 +38,13 @@ class QuotesController
             $quote = $quoteId ? Quote::find($quoteId) : new Quote();
             if (!$quote) throw new \Exception("Quote record not found.");
 
+            // 1. Initialize logic for new quotes
             if ($isNew) {
                 $quote->quote_number = generateQuoteNumber();
                 $quote->orig_user_id = (int)($_SESSION['user_id'] ?? 1);
             }
 
-            /**
-             * INTELLIGENT PDF HANDLING
-             * If editing and no new file is in $_FILES, this block is skipped,
-             * preserving the existing $quote->pdf_file_name.
-             */
-            if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
-                $service = $this->getUploadService();
-                
-                // 1. Capture the old filename if we are editing
-                $oldFile = $quote->pdf_file_name;
-
-                // 2. Upload the new file
-                $newFile = $service->upload($_FILES['pdf_file']);
-                
-                if ($newFile) {
-                    $quote->pdf_file_name = $newFile;
-
-                    // 3. Cleanup: If there was an old file, delete it from the disk
-                    if (!$isNew && !empty($oldFile)) {
-                        $oldPath = realpath(__DIR__ . '/../../public/pdfs/quotes/') . DIRECTORY_SEPARATOR . $oldFile;
-                        if (file_exists($oldPath)) {
-                            @unlink($oldPath);
-                        }
-                    }
-                }
-            }
-
-            // Standard field mapping
+            // 2. Map standard fields first to ensure data integrity
             $quote->property_address = trim($data['property_address'] ?? '');
             $quote->city             = trim($data['city'] ?? '');
             $quote->country_id       = (int)($data['country_id'] ?? 1);
@@ -78,6 +52,25 @@ class QuotesController
             $quote->postal_code      = strtoupper(trim($data['postal_code'] ?? ''));
             $quote->access_code      = trim($data['access_code'] ?? '');
             $quote->status_id        = (int)($data['status_id'] ?? Quote::STATUS_DRAFT);
+
+            // 3. Handle PDF logic (Name = Quote Number in CAPS)
+            if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
+                $service = $this->getUploadService();
+                $oldFile = $quote->pdf_file_name;
+
+                // Delete the previous file if it exists to avoid duplicates
+                if (!empty($oldFile)) {
+                    $oldPath = realpath(__DIR__ . '/../../public/pdfs/quotes/') . DIRECTORY_SEPARATOR . $oldFile;
+                    if (file_exists($oldPath)) { @unlink($oldPath); }
+                }
+
+                // Request upload with the exact Quote Number as the filename
+                $newFile = $service->upload($_FILES['pdf_file'], $quote->quote_number);
+                
+                if ($newFile) {
+                    $quote->pdf_file_name = $newFile;
+                }
+            }
 
             if ($quote->save()) {
                 if ($isNew) $this->incrementCounter('quote');
@@ -108,7 +101,16 @@ class QuotesController
             if (!$quote) throw new \Exception("Quote not found.");
 
             $service = $this->getUploadService();
-            $fileName = $service->upload($files['quote_pdf']);
+            $oldFile = $quote->pdf_file_name;
+
+            // Delete previous file if exists
+            if (!empty($oldFile)) {
+                $oldPath = realpath(__DIR__ . '/../../public/pdfs/quotes/') . DIRECTORY_SEPARATOR . $oldFile;
+                if (file_exists($oldPath)) { @unlink($oldPath); }
+            }
+
+            // Explicitly pass the quote number for naming
+            $fileName = $service->upload($files['quote_pdf'], $quote->quote_number);
 
             if ($fileName) {
                 $quote->pdf_file_name = $fileName;
