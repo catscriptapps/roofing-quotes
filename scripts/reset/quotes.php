@@ -41,6 +41,7 @@ function resetQuotesTable(): array
 
             // Status & Timestamps
             $table->unsignedInteger('status_id')->default(1)->index();
+            $table->date('date_expires')->nullable()->index();
             $table->timestamps();
 
             // Foreign Key constraints

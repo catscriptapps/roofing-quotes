@@ -18,21 +18,23 @@ declare(strict_types=1);
                     Enter your 6-digit access code below to securely view your professional roofing assessment.
                 </p>
 
-                <form method="POST" action="<?= $baseUrl ?>quote/lookup" class="relative group max-w-lg mx-auto lg:mx-0">
+                <div id="quote-pdf-lookup-form" class="relative group max-w-lg mx-auto lg:mx-0">
                     <div class="flex shadow-2xl rounded-2xl overflow-hidden border border-secondary-100 dark:border-secondary-800 bg-white dark:bg-secondary-900 p-1.5 focus-within:border-red-500 transition-colors">
                         <input
                             type="text"
+                            id="access-code"
                             name="access_code"
                             maxlength="6"
-                            placeholder="6-digit code"
+                            placeholder="6-digit code" required 
                             class="flex-1 px-5 py-3 text-lg font-bold outline-none bg-transparent text-secondary-900 dark:text-white placeholder:text-secondary-300">
                         <button
-                            type="submit"
+                            id="access-code-submit-btn"
                             class="px-8 py-3 bg-red-600 text-white font-black text-lg hover:bg-red-700 transition-colors rounded-xl shadow-lg shadow-red-500/20">
                             View
                         </button>
                     </div>
-                </form>
+                    <p class="text-red-500 validation-msg mt-1">* Access code is required.</p>
+                </div>
             </div>
 
             <div class="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -85,7 +87,7 @@ declare(strict_types=1);
 
         <section class="text-center py-6" data-aos="zoom-in">
             <h2 class="text-2xl font-black text-secondary-900 dark:text-white mb-4">Inspector Portal</h2>
-            <a href="<?= $baseUrl ?>login"
+            <a href="<?= $baseUrl ?>login" data-login-button
                 class="inline-block px-10 py-4 bg-secondary-900 dark:bg-white text-white dark:text-secondary-950 font-black rounded-xl hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-all shadow-xl">
                 Launch <?= $appName ?>
             </a>

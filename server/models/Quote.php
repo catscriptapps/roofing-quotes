@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 /**
  * Eloquent Quote model for Roofing Quotes
@@ -33,6 +34,16 @@ class Quote extends Model
         'access_code',
         'pdf_file_name',
         'status_id',
+        'date_expires', // Added for expiry logic
+    ];
+
+    /**
+     * Cast attributes to native types.
+     */
+    protected $casts = [
+        'date_expires' => 'datetime',
+        'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
     ];
 
     public $timestamps = true;
@@ -48,6 +59,33 @@ class Quote extends Model
             self::STATUS_POSTED => 'Posted',
             default             => 'Unknown',
         };
+    }
+
+    /**
+     * Determine whether this quote is expired.
+     */
+    public function isExpired(): bool
+    {
+        if ($this->date_expires === null) {
+            return false;
+        }
+
+        return $this->date_expires->isPast();
+    }
+
+    // ============================================================
+    // Query scopes
+    // ============================================================
+
+    /**
+     * Scope: quotes that have expired.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeExpired($query)
+    {
+        return $query->where('date_expires', '<', Carbon::now());
     }
 
     // ============================================================
