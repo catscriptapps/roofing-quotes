@@ -89,9 +89,7 @@
       "_modal-factory.min.js",
       "_form-validator.min.js",
       "_spinner-utils.min.js",
-      "_toast.min.js",
-      "resources/js/pages/messages-page.js",
-      "_delete-factory.min.js"
+      "_toast.min.js"
     ],
     "css": [
       "css/app.min.css"

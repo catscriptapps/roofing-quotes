@@ -29,8 +29,6 @@ import { ResetModal } from './modals/reset-modal.js';
 import { initSidebarToggle } from './utils/sidebar-utils.js';
 import { initHeaderIcons } from './ui/header-icons.js';
 import { initFooterLinks } from './ui/footer-links.js';
-import { init as initMessagesBadge } from './ui/messages-badge.js';
-import { init as initMessagesPage } from './pages/messages-page.js';
 import { cleanupModals } from './utils/modal-cleanup.js';
 
 // === Page Manifest ===
@@ -178,9 +176,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   const sessionUserId = window.sessionUserId;
   if (sessionUserId){
-    initMessagesBadge();
     initHeaderIcons();
-    initMessagesPage();
   }
 
   // 🔑 Load manifest first

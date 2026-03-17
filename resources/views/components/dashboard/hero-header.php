@@ -31,7 +31,7 @@
                         System Online
                     </div>
                     <p class="text-sm text-gray-500 dark:text-gray-400 font-medium border-l border-gray-300 dark:border-white/10 pl-3">
-                        The <?= $appName ?> - Real Estate World Hub
+                        The <?= $appName ?> Hub
                     </p>
                 </div>
             </div>

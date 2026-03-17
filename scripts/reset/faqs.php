@@ -58,11 +58,6 @@ function resetFaqsTable(): array
             ],
 
             [
-                'question' => 'What happens when I click "Post" on a quote?',
-                'answer' => 'When an inspector clicks the "Post" button on a quote record, the system generates a unique 6-digit access code. This code can be shared with the client so they can retrieve their quote through the website portal.'
-            ],
-
-            [
                 'question' => 'Who can see the quotes in the system?',
                 'answer' => 'Inspectors can only see and manage the quotes that they personally create. Administrators have full access and can view, edit, or delete all quote records in the system.'
             ],
