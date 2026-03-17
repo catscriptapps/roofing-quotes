@@ -58,7 +58,7 @@ $messages = array_merge($messages, resetCountersTable());
 // --- RE-ENABLE FOREIGN KEY CHECKS ---
 Capsule::schema()->enableForeignKeyConstraints();
 
-$deleteAllPicturesAndPDFs = false;
+$deleteAllPicturesAndPDFs = true;
 
 // --- DELETE specific social media content only ---
 if ($deleteAllPicturesAndPDFs) {

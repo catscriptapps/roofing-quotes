@@ -26,10 +26,64 @@ class QuotesController
     }
 
     /**
+     * Handle Delete
+     */
+    public function delete($id): array
+    {
+        try {
+            // Handle cases where ID comes from the body (like your factory sends it)
+            if (is_array($id)) {
+                $encodedId = $id['id'] ?? $id['encoded_id'] ?? null;
+                $rawId = IdEncoder::decode($encodedId);
+            } else {
+                $rawId = (is_string($id) && !is_numeric($id)) ? IdEncoder::decode($id) : (int)$id;
+            }
+
+            $quote = Quote::find($rawId);
+            if (!$quote) {
+                return ['success' => false, 'messages' => ['Quote not found for deletion.']];
+            }
+
+            $qNum = $quote->quote_number;
+            $pdfName = $quote->pdf_file_name;
+
+            // --- THE FIX: RELIABLE PATHING ---
+            if (!empty($pdfName)) {
+                // DOCUMENT_ROOT is the /public folder in most setups
+                $path = $_SERVER['DOCUMENT_ROOT'] . '/pdfs/quotes/' . $pdfName;
+                
+                if (file_exists($path)) {
+                    unlink($path);
+                } else {
+                    // Manual fallback check
+                    $fallback = __DIR__ . '/../../public/pdfs/quotes/' . $pdfName;
+                    if (file_exists($fallback)) {
+                        unlink($fallback);
+                    }
+                }
+            }
+
+            if ($quote->delete()) {
+                static::logActivity("Deleted Quote #{$qNum}", 'Quotes');
+                return ['success' => true, 'messages' => ["Quote #{$qNum} deleted successfully."]];
+            }
+
+            return ['success' => false, 'messages' => ['Failed to remove quote from database.']];
+        } catch (\Throwable $e) {
+            return ['success' => false, 'messages' => [$e->getMessage()]];
+        }
+    }
+
+    /**
      * Handle Create or Update from Modal
      */
     public function save(array $data): array
     {
+        // 1. ROUTING GUARD: If a DELETE request accidentally hits this method
+        if (isset($data['_method']) && $data['_method'] === 'DELETE') {
+            return $this->delete($data);
+        }
+
         try {
             $encodedId = $data['encoded_id'] ?? null;
             $quoteId = !empty($encodedId) ? IdEncoder::decode($encodedId) : null;
@@ -38,13 +92,14 @@ class QuotesController
             $quote = $quoteId ? Quote::find($quoteId) : new Quote();
             if (!$quote) throw new \Exception("Quote record not found.");
 
-            // 1. Initialize logic for new quotes
+            // 2. REQUIRED FOR NEW QUOTES: Quote Number & User ID
             if ($isNew) {
                 $quote->quote_number = generateQuoteNumber();
-                $quote->orig_user_id = (int)($_SESSION['user_id'] ?? 1);
+                // Ensure we have a valid user ID for the foreign key constraint
+                $quote->orig_user_id = (int)($_SESSION['user_id'] ?? 1); 
             }
 
-            // 2. Map standard fields first to ensure data integrity
+            // 3. MAP ALL FIELDS (Restoring missing Address and City)
             $quote->property_address = trim($data['property_address'] ?? '');
             $quote->city             = trim($data['city'] ?? '');
             $quote->country_id       = (int)($data['country_id'] ?? 1);
@@ -53,25 +108,24 @@ class QuotesController
             $quote->access_code      = trim($data['access_code'] ?? '');
             $quote->status_id        = (int)($data['status_id'] ?? Quote::STATUS_DRAFT);
 
-            // 3. Handle PDF logic (Name = Quote Number in CAPS)
+            // 4. PDF HANDLING
             if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
                 $service = $this->getUploadService();
-                $oldFile = $quote->pdf_file_name;
-
-                // Delete the previous file if it exists to avoid duplicates
-                if (!empty($oldFile)) {
-                    $oldPath = realpath(__DIR__ . '/../../public/pdfs/quotes/') . DIRECTORY_SEPARATOR . $oldFile;
+                
+                // Cleanup old file if editing
+                if (!$isNew && !empty($quote->pdf_file_name)) {
+                    $oldPath = $_SERVER['DOCUMENT_ROOT'] . '/pdfs/quotes/' . $quote->pdf_file_name;
                     if (file_exists($oldPath)) { @unlink($oldPath); }
                 }
 
-                // Request upload with the exact Quote Number as the filename
+                // Upload using the EXACT quote number in CAPS
                 $newFile = $service->upload($_FILES['pdf_file'], $quote->quote_number);
-                
                 if ($newFile) {
                     $quote->pdf_file_name = $newFile;
                 }
             }
 
+            // 5. SAVE TO DATABASE
             if ($quote->save()) {
                 if ($isNew) $this->incrementCounter('quote');
             }
@@ -86,6 +140,7 @@ class QuotesController
                 'messages' => ["Quote saved successfully."]
             ];
         } catch (\Throwable $e) {
+            // This will now catch things like the SQL error and show you why
             return ['success' => false, 'messages' => [$e->getMessage()]];
         }
     }
@@ -125,31 +180,6 @@ class QuotesController
                 ];
             }
             throw new \Exception("Upload failed.");
-        } catch (\Throwable $e) {
-            return ['success' => false, 'messages' => [$e->getMessage()]];
-        }
-    }
-
-    /**
-     * Handle Delete
-     */
-    public function delete($id): array
-    {
-        try {
-            $rawId = (is_string($id) && !is_numeric($id)) ? IdEncoder::decode($id) : (int)$id;
-            $quote = Quote::find($rawId);
-
-            if ($quote) {
-                $qNum = $quote->quote_number;
-                $address = $quote->property_address;
-                $city = $quote->city;
-
-                if ($quote->delete()) {
-                    static::logActivity("Deleted Quote #{$qNum} for property at {$address}, {$city}", 'Quotes');
-                    return ['success' => true, 'messages' => ['Quote deleted successfully.']];
-                }
-            }
-            return ['success' => false, 'messages' => ['Quote not found or failed to delete.']];
         } catch (\Throwable $e) {
             return ['success' => false, 'messages' => [$e->getMessage()]];
         }

@@ -16,9 +16,20 @@ if (!$userId) {
 }
 
 /**
- * Since we use FormData for PDF support, values are in $_POST.
+ * Handle input from both multipart/form-data (PDF uploads)
+ * and raw JSON payloads (from the Delete Factory).
  */
-$input  = $_POST;
+$input = $_POST;
+
+// If $_POST is empty, check for JSON input (common with fetch/JSON payloads)
+if (empty($input)) {
+    $rawPayload = file_get_contents('php://input');
+    $jsonData = json_decode($rawPayload, true);
+    if (is_array($jsonData)) {
+        $input = $jsonData;
+    }
+}
+
 $files  = $_FILES; 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
@@ -33,6 +44,7 @@ try {
 
     // HANDLE POST ACTIONS
     if ($method === 'POST') {
+        // Now $input['_method'] will be correctly detected even if sent as JSON
         $override = strtoupper($input['_method'] ?? '');
 
         if ($override === 'DELETE') {
