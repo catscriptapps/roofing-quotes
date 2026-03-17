@@ -43,7 +43,7 @@ try {
 
     // ✅ SCENARIO 3: valid → stream PDF
     // Using [quote_number].pdf as per our standard
-    $pdfPath = __DIR__ . '/../storage/quotes/' . $quote->quote_number . '.pdf';
+    $pdfPath = __DIR__ . '/../storage/pdfs/quotes/' . $quote->quote_number . '.pdf';
 
     if (!file_exists($pdfPath)) {
         json_response([
