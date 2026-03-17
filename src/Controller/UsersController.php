@@ -190,7 +190,7 @@ class UsersController
                 }
             }
 
-            if ($isNew) $user->status_id = 0;
+            if ($isNew) $user->status_id = 1;
 
             $user->save();
 

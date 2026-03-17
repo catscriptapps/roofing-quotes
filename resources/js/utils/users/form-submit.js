@@ -58,7 +58,23 @@ export function handleUserFormSubmission(
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // 1. Basic Field Validation
         if (!validator.validateForEmptyFields(e)) return;
+
+        // 2. Role Validation (At least one checkbox)
+        const roleCheckboxes = form.querySelectorAll('input[name="userTypeIds[]"]');
+        const isAnyRoleSelected = Array.from(roleCheckboxes).some(cb => cb.checked);
+
+        if (!isAnyRoleSelected) {
+            apiMsg.innerHTML = `
+                <div class="bg-amber-100 border border-amber-400 text-amber-700 px-4 py-2 rounded-xl font-bold text-sm mt-2 animate-shake">
+                    Please select at least one User Role.
+                </div>
+            `;
+            // Scroll to the roles section if it's a long form
+            roleCheckboxes[0].closest('.bg-gray-50')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
 
         submitBtn.disabled = true;
         submitBtn.innerHTML = buttonSpinner; 
@@ -106,6 +122,8 @@ export function handleUserFormSubmission(
                         ${result.messages?.[0] || 'Saved successfully.'}
                     </div>
                 `;
+
+                submitBtn.style.display = "none";
 
                 setTimeout(() => {
                     if (modalInstance && typeof modalInstance.close === 'function') {
