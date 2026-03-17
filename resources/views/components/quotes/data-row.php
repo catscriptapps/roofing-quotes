@@ -115,7 +115,7 @@ $statusBadge = match ((int)($rowItem['status_id'] ?? 1)) {
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tight">
                             By: <?= htmlspecialchars($ownerFullName) ?>
                         </span>
-                        <span class="copy-access-code cursor-pointer active:scale-95 transition-transform px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-[10px] font-mono font-bold text-gray-500 border border-gray-200 dark:border-gray-700" 
+                        <span class="copy-to-clipboard cursor-pointer active:scale-95 transition-transform px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-[10px] font-mono font-bold text-gray-500 border border-gray-200 dark:border-gray-700" 
                               data-code="<?= htmlspecialchars($rowItem['access_code'] ?? '') ?>" title="Click to Copy">
                             <?= htmlspecialchars($rowItem['access_code'] ?: '----') ?>
                         </span>
@@ -148,7 +148,7 @@ $statusBadge = match ((int)($rowItem['status_id'] ?? 1)) {
 
     <td class="px-6 py-4 hidden lg:table-cell">
         <div class="flex items-center gap-2">
-            <span class="copy-access-code cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95 transition-all px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-mono font-bold text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
+            <span class="copy-to-clipboard cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95 transition-all px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-mono font-bold text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
                   data-code="<?= htmlspecialchars($rowItem['access_code'] ?? '') ?>" title="Click to Copy">
                 <?= htmlspecialchars($rowItem['access_code'] ?: '----') ?>
             </span>

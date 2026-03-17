@@ -7,6 +7,7 @@ import { enableTableSearch } from '../components/table-search.js';
 import { initViewQuote } from '../utils/quotes/view-quote.js';
 import { initQuoteInfiniteScroll } from '../utils/quotes/infinite-scroll-quotes.js';
 import { initQuickPdfUpload } from '../utils/quotes/quick-pdf-upload.js';
+import { copyToClipboard } from '../utils/globals/copy-to-clipboard.js';
 
 /**
  * Initialize the Roofing Quotes page logic.
@@ -39,4 +40,6 @@ export function init() {
 
     // 7. Initialize the Quick PDF trigger (the small red button on the table row)
     initQuickPdfUpload();
+
+    copyToClipboard();
 }

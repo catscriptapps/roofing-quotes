@@ -231,6 +231,7 @@ class QuotesController
                 $q->where('quote_number', 'LIKE', $term)
                     ->orWhere('property_address', 'LIKE', $term)
                     ->orWhere('city', 'LIKE', $term)
+                    ->orWhere('access_code', 'LIKE', $term)
                     ->orWhere('postal_code', 'LIKE', $term);
                 
                 $q->orWhereHas('owner', function ($rel) use ($term) {

@@ -1,5 +1,6 @@
 // /resources/js/utils/quotes/view-quote.js
 import { modalDetailOwner } from "../../ui/modal-detail-owner";
+import { copyToClipboard } from "../globals/copy-to-clipboard";
 
 /**
  * Initialize the detailed View Modal for Roofing Quotes.
@@ -50,7 +51,13 @@ export function initViewQuote() {
 
         if (fullAddressEl) fullAddressEl.textContent = data.address  + ' - ' + data.city + ', ' + data.regionName + ' ';
         if (postalCodeEl) postalCodeEl.textContent = data.postalCode || '---';
-        if (accessCodeEl) accessCodeEl.textContent = data.accessCode || '----';
+        
+        if (accessCodeEl) {
+            accessCodeEl.textContent = data.accessCode || '----';
+            accessCodeEl.setAttribute('data-code', data.accessCode || '');
+            accessCodeEl.classList.add('copy-to-clipboard', 'cursor-pointer');
+            copyToClipboard();
+        }
 
         // 3. Owner detail logic
         modalDetailOwner('quote', data);
