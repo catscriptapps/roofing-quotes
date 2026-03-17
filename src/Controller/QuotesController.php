@@ -195,18 +195,18 @@ class QuotesController
         }
     }
 
-    // index(), renderRow(), and incrementCounter() remain below...
-
     /**
      * Prepare data for the Quotes List Page or Search AJAX
+     * Restricted to ownership unless user is Admin
      */
     public function index(): void
     {
+        $user = $GLOBALS['currentUser']; // Assuming $currentUser is globally available
         $query = $_GET['q'] ?? '';
         
         // Pagination logic
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $perPage = 15; // Set your preferred items per page
+        $perPage = 15;
         $offset = ($page - 1) * $perPage;
 
         $builder = Quote::with([
@@ -216,7 +216,16 @@ class QuotesController
             'region'
         ]);
 
-        // Search Filter
+        /** * ✅ SECURITY LAYER: 
+         * If the user is NOT an admin (Role ID 1), restricted to their own quotes.
+         * We apply this FIRST so counts and searches are automatically scoped.
+         */
+        $isAdmin = in_array(1, $user->user_type_ids ?? []);
+        if (!$isAdmin) {
+            $builder->where('orig_user_id', $user->id);
+        }
+
+        // Search Filter (Now scopes within the allowed results)
         if (!empty($query)) {
             $builder->where(function ($q) use ($query) {
                 $term = '%' . trim($query) . '%';
@@ -235,7 +244,7 @@ class QuotesController
             });
         }
 
-        // Get total count for metadata before applying limit/offset
+        // Get total count for metadata (Correctly scoped by ownership/admin status)
         $totalRecords = (clone $builder)->count();
 
         // Fetch paginated results
@@ -244,14 +253,13 @@ class QuotesController
                           ->limit($perPage)
                           ->get();
 
-        // Handle AJAX/API requests (Search or Infinite Scroll)
+        // Handle AJAX/API requests
         if (isset($_GET['q']) || isset($_GET['page']) || (isset($_GET['limit']) && $_GET['limit'] === 'all')) {
             header('Content-Type: application/json');
 
-            // Map rows to HTML if it's a search or scroll request
             $data = array_map(fn($q) => [
                 'rowHtml' => self::renderRow($q),
-                'encoded_id' => $q->encoded_id // Useful for JS side-checks
+                'encoded_id' => $q->encoded_id 
             ], $quotes->all());
 
             echo json_encode([
@@ -267,13 +275,12 @@ class QuotesController
             exit;
         }
 
-        // Standard Page Load (PHP Rendering)
+        // Standard Page Load
         $html = '';
         foreach ($quotes as $quote) {
             $html .= self::renderRow($quote);
         }
 
-        // Global variables for the view
         $GLOBALS['quoteRows'] = $html;
         $GLOBALS['title'] = "Quotes";
         $GLOBALS['totalCount'] = $totalRecords;
