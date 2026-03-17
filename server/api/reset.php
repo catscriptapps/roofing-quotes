@@ -66,7 +66,7 @@ if ($deleteAllPicturesAndPDFs) {
     $targetFolders = [
         __DIR__ . '/../../public/images/uploads',
         __DIR__ . '/../../public/videos',
-        __DIR__ . '/../../public/pdfs',
+        __DIR__ . '/../../server/storage/pdfs',
     ];
 
     foreach ($targetFolders as $folder) {

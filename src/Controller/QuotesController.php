@@ -15,14 +15,24 @@ class QuotesController
 {
     use RecentActivityLogger;
 
+    /**
+     * Helper to get the absolute storage path
+     */
+    protected function getStoragePath(string $filename = ''): string
+    {
+        $basePath = realpath(__DIR__ . '/../../server/storage/pdfs/quotes/');
+        if (!$basePath) {
+            $basePath = __DIR__ . '/../../server/storage/pdfs/quotes/';
+            if (!is_dir($basePath)) {
+                mkdir($basePath, 0755, true);
+            }
+        }
+        return $filename ? $basePath . DIRECTORY_SEPARATOR . $filename : $basePath;
+    }
+
     protected function getUploadService(): PdfUploadService
     {
-        // Path updated to public/pdfs/quotes/
-        $path = realpath(__DIR__ . '/../../public/pdfs/quotes/');
-        if (!$path) {
-            $path = __DIR__ . '/../../public/pdfs/quotes/';
-        }
-        return new PdfUploadService($path);
+        return new PdfUploadService($this->getStoragePath());
     }
 
     /**
@@ -31,7 +41,6 @@ class QuotesController
     public function delete($id): array
     {
         try {
-            // Handle cases where ID comes from the body (like your factory sends it)
             if (is_array($id)) {
                 $encodedId = $id['id'] ?? $id['encoded_id'] ?? null;
                 $rawId = IdEncoder::decode($encodedId);
@@ -47,19 +56,11 @@ class QuotesController
             $qNum = $quote->quote_number;
             $pdfName = $quote->pdf_file_name;
 
-            // --- THE FIX: RELIABLE PATHING ---
+            // Delete from SERVER STORAGE
             if (!empty($pdfName)) {
-                // DOCUMENT_ROOT is the /public folder in most setups
-                $path = $_SERVER['DOCUMENT_ROOT'] . '/pdfs/quotes/' . $pdfName;
-                
-                if (file_exists($path)) {
-                    unlink($path);
-                } else {
-                    // Manual fallback check
-                    $fallback = __DIR__ . '/../../public/pdfs/quotes/' . $pdfName;
-                    if (file_exists($fallback)) {
-                        unlink($fallback);
-                    }
+                $filePath = $this->getStoragePath($pdfName);
+                if (file_exists($filePath)) {
+                    unlink($filePath);
                 }
             }
 
@@ -74,12 +75,11 @@ class QuotesController
         }
     }
 
-/**
+    /**
      * Handle Create or Update from Modal
      */
     public function save(array $data): array
     {
-        // 1. ROUTING GUARD
         if (isset($data['_method']) && $data['_method'] === 'DELETE') {
             return $this->delete($data);
         }
@@ -92,62 +92,47 @@ class QuotesController
             $quote = $quoteId ? Quote::find($quoteId) : new Quote();
             if (!$quote) throw new \Exception("Quote record not found.");
 
-            // 2. REQUIRED FOR NEW QUOTES
             if ($isNew) {
                 $quote->quote_number = generateQuoteNumber();
                 $quote->orig_user_id = (int)($_SESSION['user_id'] ?? 1); 
             }
 
-            // 3. MAP STANDARD FIELDS
             $quote->property_address = trim($data['property_address'] ?? '');
             $quote->city             = trim($data['city'] ?? '');
             $quote->country_id       = (int)($data['country_id'] ?? 1);
             $quote->region_id        = (int)($data['region_id'] ?? 1);
             $quote->postal_code      = strtoupper(trim($data['postal_code'] ?? ''));
-            // Note: access_code is handled below in the PDF section
             $quote->status_id        = (int)($data['status_id'] ?? Quote::STATUS_DRAFT);
 
-            // 4. PDF HANDLING & DYNAMIC ACCESS CODE
             if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
                 $service = $this->getUploadService();
                 
-                // Cleanup old file if editing
+                // Cleanup old file from STORAGE
                 if (!$isNew && !empty($quote->pdf_file_name)) {
-                    $oldPath = $_SERVER['DOCUMENT_ROOT'] . '/pdfs/quotes/' . $quote->pdf_file_name;
+                    $oldPath = $this->getStoragePath($quote->pdf_file_name);
                     if (file_exists($oldPath)) { @unlink($oldPath); }
                 }
 
-                // Upload the file
                 $newFile = $service->upload($_FILES['pdf_file'], $quote->quote_number);
                 
                 if ($newFile) {
                     $quote->pdf_file_name = $newFile;
-
-                    /**
-                     * GENERATE 6-DIGIT ACCESS CODE
-                     * Excludes 1, 0, I, O for readability
-                     */
+                    
+                    // Generate 6-Digit Access Code
                     $chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
                     $code = '';
                     for ($i = 0; $i < 6; $i++) {
                         $code .= $chars[random_int(0, strlen($chars) - 1)];
                     }
-                    
                     $quote->access_code = $code;
-                    
-                    // Set status to Active now that a PDF exists
-                    // Assuming Quote::STATUS_ACTIVE is 2 (adjust if your constant differs)
-                    $quote->status_id = 2; 
+                    $quote->status_id = 2; // Posted
                 }
             } else {
-                // If NOT a new file upload, we still allow updating the access_code 
-                // manually from the $data if it was provided, otherwise we leave it alone.
                 if (isset($data['access_code'])) {
                     $quote->access_code = trim($data['access_code']);
                 }
             }
 
-            // 5. SAVE TO DATABASE
             if ($quote->save()) {
                 if ($isNew) $this->incrementCounter('quote');
             }
@@ -176,15 +161,13 @@ class QuotesController
             if (!$quote) throw new \Exception("Quote not found.");
 
             $service = $this->getUploadService();
-            $oldFile = $quote->pdf_file_name;
-
-            // Delete previous file if exists
-            if (!empty($oldFile)) {
-                $oldPath = realpath(__DIR__ . '/../../public/pdfs/quotes/') . DIRECTORY_SEPARATOR . $oldFile;
+            
+            // Delete old file from STORAGE
+            if (!empty($quote->pdf_file_name)) {
+                $oldPath = $this->getStoragePath($quote->pdf_file_name);
                 if (file_exists($oldPath)) { @unlink($oldPath); }
             }
 
-            // Explicitly pass the quote number for naming
             $fileName = $service->upload($files['quote_pdf'], $quote->quote_number);
 
             if ($fileName) {
@@ -204,6 +187,8 @@ class QuotesController
             return ['success' => false, 'messages' => [$e->getMessage()]];
         }
     }
+
+    // index(), renderRow(), and incrementCounter() remain below...
 
     /**
      * Prepare data for the Quotes List Page or Search AJAX
@@ -285,7 +270,7 @@ class QuotesController
         $GLOBALS['totalCount'] = $totalRecords;
     }
 
-/**
+    /**
      * Render individual table row HTML
      */
     public static function renderRow(\App\Models\Quote $quote): string
