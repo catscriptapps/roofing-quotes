@@ -58,7 +58,7 @@ $editClass = 'edit-quote-btn';
 $deleteClass = 'delete-quote-btn';
 
 $statusBadge = match ((int)($rowItem['status_id'] ?? 1)) {
-    2       => '<span class="inline-flex items-center rounded-full bg-gray-900 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white border border-black">Posted</span>',
+    2       => '<span class="inline-flex items-center rounded-full bg-green-900 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white border border-green-900">Posted</span>',
     default => '<span class="inline-flex items-center rounded-full bg-red-50 dark:bg-red-900/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-red-600 border border-red-100 dark:border-red-900/30">Draft</span>'
 };
 ?>

@@ -41,7 +41,7 @@
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-3 mb-1">
-                            <h3 class="text-xl font-black text-gray-900 dark:text-white truncate leading-tight uppercase italic" id="view-quote-number">Q26-0000</h3>
+                            <h3 class="text-lg font-black text-gray-900 dark:text-white leading-tight uppercase" id="view-quote-number">Q26-0000</h3>
                             <span id="view-quote-status" class="px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-red-100 bg-red-50 text-red-600 dark:bg-red-900/20 dark:border-red-900/30">Draft</span>
                         </div>
                         <p id="view-quote-address-sub" class="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] truncate">Property Address Placeholder</p>

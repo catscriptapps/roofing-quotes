@@ -25,7 +25,7 @@ export function initViewQuote() {
             const statusLabel = data.statusLabel || 'Draft';
             statusEl.textContent = statusLabel;
             statusEl.className = statusLabel.toLowerCase() === 'posted' 
-                ? 'px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-gray-900 bg-gray-900 text-white'
+                ? 'px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-green-900 bg-green-900 text-white'
                 : 'px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-red-100 bg-red-50 text-red-600';
         }
 
