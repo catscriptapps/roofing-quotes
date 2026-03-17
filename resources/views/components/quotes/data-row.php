@@ -61,8 +61,6 @@ $statusBadge = match ((int)($rowItem['status_id'] ?? 1)) {
     2       => '<span class="inline-flex items-center rounded-full bg-gray-900 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white border border-black">Posted</span>',
     default => '<span class="inline-flex items-center rounded-full bg-red-50 dark:bg-red-900/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-red-600 border border-red-100 dark:border-red-900/30">Draft</span>'
 };
-
-$updatedAt = !empty($rowItem['updated_at']) ? date('M j, g:i a', strtotime($rowItem['updated_at'])) : 'N/A';
 ?>
 
 <tr id="quote-row-<?= $rowItem['quote_id'] ?? '0' ?>" 
@@ -117,7 +115,8 @@ $updatedAt = !empty($rowItem['updated_at']) ? date('M j, g:i a', strtotime($rowI
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tight">
                             By: <?= htmlspecialchars($ownerFullName) ?>
                         </span>
-                        <span class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-[10px] font-mono font-bold text-gray-500 border border-gray-200 dark:border-gray-700">
+                        <span class="copy-access-code cursor-pointer active:scale-95 transition-transform px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-[10px] font-mono font-bold text-gray-500 border border-gray-200 dark:border-gray-700" 
+                              data-code="<?= htmlspecialchars($rowItem['access_code'] ?? '') ?>" title="Click to Copy">
                             <?= htmlspecialchars($rowItem['access_code'] ?: '----') ?>
                         </span>
                     </div>
@@ -147,10 +146,16 @@ $updatedAt = !empty($rowItem['updated_at']) ? date('M j, g:i a', strtotime($rowI
         </div>
     </td>
 
-    <td class="px-6 py-4 hidden md:table-cell">
-        <span class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-mono font-bold text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
-            <?= htmlspecialchars($rowItem['access_code'] ?: '----') ?>
-        </span>
+    <td class="px-6 py-4 hidden lg:table-cell">
+        <div class="flex items-center gap-2">
+            <span class="copy-access-code cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95 transition-all px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-mono font-bold text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
+                  data-code="<?= htmlspecialchars($rowItem['access_code'] ?? '') ?>" title="Click to Copy">
+                <?= htmlspecialchars($rowItem['access_code'] ?: '----') ?>
+            </span>
+            <?php if (!empty($rowItem['access_code'])): ?>
+                <i class="bi bi-clipboard text-gray-300 dark:text-gray-600 text-[10px]"></i>
+            <?php endif; ?>
+        </div>
     </td>
 
     <td class="px-6 py-4 hidden lg:table-cell">

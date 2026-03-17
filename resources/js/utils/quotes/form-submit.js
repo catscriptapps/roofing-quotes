@@ -121,6 +121,8 @@ export function handleQuoteFormSubmission(
                     </div>
                 `;
 
+                submitBtn.style.display = "none";
+
                 setTimeout(() => {
                     if (modalInstance?.close) modalInstance.close();
                 }, 800);

@@ -74,12 +74,12 @@ class QuotesController
         }
     }
 
-    /**
+/**
      * Handle Create or Update from Modal
      */
     public function save(array $data): array
     {
-        // 1. ROUTING GUARD: If a DELETE request accidentally hits this method
+        // 1. ROUTING GUARD
         if (isset($data['_method']) && $data['_method'] === 'DELETE') {
             return $this->delete($data);
         }
@@ -92,23 +92,22 @@ class QuotesController
             $quote = $quoteId ? Quote::find($quoteId) : new Quote();
             if (!$quote) throw new \Exception("Quote record not found.");
 
-            // 2. REQUIRED FOR NEW QUOTES: Quote Number & User ID
+            // 2. REQUIRED FOR NEW QUOTES
             if ($isNew) {
                 $quote->quote_number = generateQuoteNumber();
-                // Ensure we have a valid user ID for the foreign key constraint
                 $quote->orig_user_id = (int)($_SESSION['user_id'] ?? 1); 
             }
 
-            // 3. MAP ALL FIELDS (Restoring missing Address and City)
+            // 3. MAP STANDARD FIELDS
             $quote->property_address = trim($data['property_address'] ?? '');
             $quote->city             = trim($data['city'] ?? '');
             $quote->country_id       = (int)($data['country_id'] ?? 1);
             $quote->region_id        = (int)($data['region_id'] ?? 1);
             $quote->postal_code      = strtoupper(trim($data['postal_code'] ?? ''));
-            $quote->access_code      = trim($data['access_code'] ?? '');
+            // Note: access_code is handled below in the PDF section
             $quote->status_id        = (int)($data['status_id'] ?? Quote::STATUS_DRAFT);
 
-            // 4. PDF HANDLING
+            // 4. PDF HANDLING & DYNAMIC ACCESS CODE
             if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
                 $service = $this->getUploadService();
                 
@@ -118,10 +117,33 @@ class QuotesController
                     if (file_exists($oldPath)) { @unlink($oldPath); }
                 }
 
-                // Upload using the EXACT quote number in CAPS
+                // Upload the file
                 $newFile = $service->upload($_FILES['pdf_file'], $quote->quote_number);
+                
                 if ($newFile) {
                     $quote->pdf_file_name = $newFile;
+
+                    /**
+                     * GENERATE 6-DIGIT ACCESS CODE
+                     * Excludes 1, 0, I, O for readability
+                     */
+                    $chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+                    $code = '';
+                    for ($i = 0; $i < 6; $i++) {
+                        $code .= $chars[random_int(0, strlen($chars) - 1)];
+                    }
+                    
+                    $quote->access_code = $code;
+                    
+                    // Set status to Active now that a PDF exists
+                    // Assuming Quote::STATUS_ACTIVE is 2 (adjust if your constant differs)
+                    $quote->status_id = 2; 
+                }
+            } else {
+                // If NOT a new file upload, we still allow updating the access_code 
+                // manually from the $data if it was provided, otherwise we leave it alone.
+                if (isset($data['access_code'])) {
+                    $quote->access_code = trim($data['access_code']);
                 }
             }
 
@@ -130,7 +152,6 @@ class QuotesController
                 if ($isNew) $this->incrementCounter('quote');
             }
 
-            // Refresh relations for a clean UI render
             $quote = $quote->fresh(['owner.country', 'owner.region', 'country', 'region']);
             static::logActivity(($isNew ? "Created" : "Updated") . " Quote #{$quote->quote_number}", 'Quotes');
 
@@ -140,7 +161,6 @@ class QuotesController
                 'messages' => ["Quote saved successfully."]
             ];
         } catch (\Throwable $e) {
-            // This will now catch things like the SQL error and show you why
             return ['success' => false, 'messages' => [$e->getMessage()]];
         }
     }
@@ -264,7 +284,7 @@ class QuotesController
         $GLOBALS['totalCount'] = $totalRecords;
     }
 
-    /**
+/**
      * Render individual table row HTML
      */
     public static function renderRow(\App\Models\Quote $quote): string
@@ -275,6 +295,12 @@ class QuotesController
         $rowItem['status_label'] = $quote->status_label;
         $rowItem['created_at_formatted'] = $quote->created_at ? $quote->created_at->format('M j, Y') : 'N/A';
         
+        // Ensure access_code is ready for the view
+        $rowItem['access_code'] = !empty($quote->access_code) ? $quote->access_code : '---';
+        
+        // Ensure status_id is available for conditional Tailwind styling in the component
+        $rowItem['status_id'] = (int)$quote->status_id;
+
         $GLOBALS['assetBase'] = getAssetBase();
         
         $owner = $quote->owner;
@@ -296,13 +322,14 @@ class QuotesController
         try {
             if (file_exists($path)) {
                 $assetBase = $GLOBALS['assetBase'];
+                // All keys in $rowItem will be available inside data-row.php
                 include $path;
             } else {
                 throw new \Exception("Component not found: data-row.php");
             }
         } catch (\Throwable $e) {
             ob_end_clean();
-            return "<tr><td colspan='6' class='p-4 text-red-500'>Render Error: " . $e->getMessage() . "</td></tr>";
+            return "<tr><td colspan='100%' class='p-4 text-red-500 font-sans'>Render Error: " . $e->getMessage() . "</td></tr>";
         }
         return ob_get_clean();
     }
