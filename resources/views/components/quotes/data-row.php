@@ -7,14 +7,17 @@
 $assetBase = $GLOBALS['assetBase'] ?? '/';
 $owner = $rowItem['owner'] ?? null;
 
-// Inspector Logic (Column 2)
+// Move this UP so the array can use it
+$updatedAt = !empty($rowItem['updated_at']) ? date('M j, g:i a', strtotime($rowItem['updated_at'])) : 'N/A';
+
+// Inspector Logic
 $hasAvatar = !empty($owner['avatar_url']);
 $AVATAR_DIR_PREFIX = $assetBase . 'images/uploads/avatars/';
 $avatarUrl = $hasAvatar ? htmlspecialchars($AVATAR_DIR_PREFIX . $owner['avatar_url']) : '';
 $ownerFullName = $owner ? trim(($owner['first_name'] ?? '') . ' ' . ($owner['last_name'] ?? '')) : 'Unknown';
 $inspectorInitial = strtoupper(substr($owner['first_name'] ?? 'U', 0, 1));
 
-// Property Logic (Column 1)
+// Property Logic
 $propertyAddress = $rowItem['property_address'] ?? 'No Address';
 $propertyInitial = strtoupper(substr(ltrim($propertyAddress, '0123456789 '), 0, 1)) ?: '#';
 $hasPdf = !empty($rowItem['pdf_file_name']);
@@ -31,10 +34,24 @@ $quoteDataAttrs = [
     'encoded-id'   => $rowItem['encoded_id'] ?? '',
     'quote-number' => $rowItem['quote_number'] ?? '',
     'address'      => $propertyAddress,
-    'city'         => $rowItem['city'] ?? '',
+    'city'         => $rowItem['city'] ?? 'Barrie',
     'postal-code'  => $rowItem['postal_code'] ?? '',
-    'owner-name'   => $ownerFullName,
+    'region-name'  => $rowItem['region_name'] ?? 'Ontario',
+    'country-name' => $rowItem['country_name'] ?? 'Canada',
+    'access-code'  => $rowItem['access_code'] ?: '----', 
+
     'pdf-file'     => $rowItem['pdf_file_name'] ?? '',
+    'status-label' => (int)($rowItem['status_id'] ?? 1) === 2 ? 'Posted' : 'Draft',
+    'created-at'   => $rowItem['created_at_formatted'] ?? 'N/A',
+    'updated-at'   => $updatedAt, 
+
+    // Owner Data 
+    'owner-name'                    => $ownerFullName,
+    'owner-avatar'                  => $avatarUrl,
+    'owner-initial'                 => $inspectorInitial,
+    'owner-region'                  => $rowItem['owner_region'] ?? 'Unknown Region',
+    'owner-country'                 => $rowItem['owner_country'] ?? 'Unkown Country',
+    'user-types'                    => $rowItem['user_types_json'] ?? '["Client"]',
 ];
 
 $editClass = 'edit-quote-btn';

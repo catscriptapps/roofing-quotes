@@ -32,12 +32,12 @@
     <div id="close-view-quote-modal-overlay" class="absolute inset-0 bg-gray-950/60 backdrop-blur-sm transition-opacity"></div>
 
     <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-900 w-full max-w-5xl rounded-[2.5rem] shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden transform transition-all animate-in fade-in zoom-in duration-200">
+        <div class="bg-white dark:bg-gray-900 w-full max-w-3xl rounded-[2.5rem] shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden transform transition-all animate-in fade-in zoom-in duration-200">
 
             <div class="px-8 py-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-800/50">
                 <div class="flex items-center space-x-5 overflow-hidden">
                     <div id="view-quote-icon-container" class="h-14 w-14 flex-shrink-0 rounded-2xl bg-red-600 flex items-center justify-center text-white shadow-lg shadow-red-600/20">
-                        <i class="bi bi-file-earmark-text text-2xl"></i>
+                        <span id="view-quote-initial" class="text-xl font-black uppercase"></span>
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-3 mb-1">
@@ -86,39 +86,21 @@
                     </div>
                 </div>
 
-                <div class="px-2">
-                    <h3 class="text-xs font-black text-red-600 uppercase tracking-[0.3em] flex items-center gap-2 mb-6">
-                        <span class="w-8 h-[2px] bg-red-600"></span>
-                        <i class="bi bi-globe"></i> Jurisdictional Info
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white dark:bg-gray-800/50 p-5 rounded-2xl border border-gray-100 dark:border-gray-700">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Country</p>
-                            <p id="view-quote-country" class="text-sm font-bold text-gray-900 dark:text-white">---</p>
-                        </div>
-                        <div class="bg-white dark:bg-gray-800/50 p-5 rounded-2xl border border-gray-100 dark:border-gray-700">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Region / Province</p>
-                            <p id="view-quote-region" class="text-sm font-bold text-gray-900 dark:text-white">---</p>
-                        </div>
-                        <div class="bg-white dark:bg-gray-800/50 p-5 rounded-2xl border border-gray-100 dark:border-gray-700">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">City / Municipality</p>
-                            <p id="view-quote-city" class="text-sm font-bold text-gray-900 dark:text-white">---</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 px-2">
-                    <div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-10 px-2">
+                    <div class="md:col-span-8">
                         <h3 class="text-xs font-black text-red-600 uppercase tracking-[0.3em] flex items-center gap-2 mb-6">
                             <span class="w-8 h-[2px] bg-red-600"></span>
-                            <i class="bi bi-file-earmark-pdf-fill"></i> Quote Document
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
+                                <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+                            </svg>
+                            Quote Document
                         </h3>
-                        <div class="flex items-center space-x-4 p-5 rounded-2xl bg-gray-950 text-white shadow-xl">
-                            <div class="bg-white/10 p-3 rounded-xl">
-                                <i class="bi bi-filetype-pdf text-2xl text-red-500"></i>
-                            </div>
+                        <div class="flex items-center space-x-4 p-5 rounded-2xl bg-gray-950 text-white shadow-xl border border-white/5">
+                            <div id="view-quote-pdf-icon" class="bg-white/10 p-3 rounded-xl flex-shrink-0">
+                                </div>
                             <div class="min-w-0 flex-1">
-                                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">Attached PDF</p>
+                                <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">Attached PDF File</p>
                                 <a id="view-quote-pdf-link" href="#" target="_blank" class="block text-sm font-bold text-red-400 truncate hover:text-red-300 transition-colors">
                                     No Document Attached
                                 </a>
@@ -126,18 +108,21 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div class="md:col-span-4">
                         <h3 class="text-xs font-black text-red-600 uppercase tracking-[0.3em] flex items-center gap-2 mb-6">
                             <span class="w-8 h-[2px] bg-red-600"></span>
-                            <i class="bi bi-clock-history"></i> Log History
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
+                            </svg>
+                            Log History
                         </h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between border-b border-gray-50 dark:border-gray-800 pb-2">
-                                <span class="text-xs text-gray-500">Date Generated</span>
+                        <div class="space-y-5 bg-gray-50/50 dark:bg-gray-800/50 p-5 rounded-2xl border border-gray-100 dark:border-gray-800">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Date Generated</span>
                                 <span id="view-quote-created" class="text-xs font-bold text-gray-900 dark:text-white">---</span>
                             </div>
-                            <div class="flex items-center justify-between border-b border-gray-50 dark:border-gray-800 pb-2">
-                                <span class="text-xs text-gray-500">Last System Update</span>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Last System Update</span>
                                 <span id="view-quote-updated" class="text-xs font-bold text-gray-900 dark:text-white">---</span>
                             </div>
                         </div>
@@ -149,16 +134,6 @@
             <div class="px-8 py-5 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 flex justify-end items-center space-x-4">
                 <button type="button" class="close-view-quote-modal px-5 py-3 text-xs font-black text-gray-500 uppercase tracking-widest hover:text-gray-900 dark:hover:text-white transition-colors">
                     Dismiss
-                </button>
-                <button type="button" id="view-quote-print-btn" class="px-6 py-3 text-xs font-black text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center gap-2 uppercase tracking-widest">
-                    <i class="bi bi-printer"></i>
-                    Print
-                </button>
-                <button type="button" id="view-quote-edit-btn" class="px-8 py-3 text-xs font-black text-white bg-red-600 hover:bg-red-700 rounded-xl transition-all active:scale-95 shadow-lg shadow-red-600/20 flex items-center gap-2 uppercase tracking-widest">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                    </svg>
-                    Modify Quote
                 </button>
             </div>
         </div>

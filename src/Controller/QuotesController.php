@@ -253,6 +253,7 @@ class QuotesController
         
         $rowItem['owner_country'] = $owner->country->country ?? 'N/A';
         $rowItem['owner_region']  = $owner->region->region ?? 'N/A';
+        $rowItem['user_types_json'] = getUserRoles($owner);
 
         // Check if PDF exists to determine button state in the row
         $rowItem['has_pdf'] = !empty($quote->pdf_file_name);
