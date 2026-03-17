@@ -5,6 +5,7 @@ import { quoteForm } from '../forms/quote-form.js';
 import { fetchRegions } from '../api/regions-api.js';
 import { fetchCountries } from '../api/countries-api.js';
 import { handleQuoteFormSubmission } from '../utils/quotes/form-submit.js';
+import { enablePostalCodeFormatting } from '../components/postal-code-formatter.js.js';
 
 let quoteModal = null;
 
@@ -17,6 +18,9 @@ function initFormFeatures(formId, mode, modalInstance) {
 
     // Handle Submission with FormData support for PDF uploads
     handleQuoteFormSubmission(form, mode, modalInstance);
+
+    // Initialize the postal code formatter for the current form
+    enablePostalCodeFormatting(form);
 }
 
 // --- Add Quote ---
