@@ -37,7 +37,7 @@ declare(strict_types=1);
                 </div>
                 <h3 class="text-2xl font-black text-red-500 mb-3">The Vision</h3>
                 <p class="text-secondary-300 leading-relaxed">
-                    Becoming the industry standard where every property owner knows exactly where to find their secure digital roofing documentation.
+                    Becoming the industry standard where the property owner knows exactly where to find their secure digital roofing quotes.
                 </p>
             </div>
         </section>
