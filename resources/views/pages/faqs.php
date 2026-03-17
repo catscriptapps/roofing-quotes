@@ -8,12 +8,12 @@ use Src\Service\AuthService;
 $controller = new \Src\Controller\FaqsController();
 $controller->index();
 
-// Pull rows from the global scope (populated by controller->index)
+// Pull rows from the global scope
 $faqRows = $GLOBALS['faqRows'] ?? '';
 $isAdmin = (AuthService::isAdmin());
 ?>
 
-<div class="py-10 animate-in fade-in slide-in-from-bottom-4 duration-700 font-sans">
+<div class="py-10 overflow-x-hidden animate-in fade-in slide-in-from-bottom-4 duration-700 font-sans">
 
     <div class="relative mb-12">
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 pb-10 border-b border-gray-100 dark:border-gray-800">
