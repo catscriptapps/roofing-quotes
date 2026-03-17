@@ -23,6 +23,16 @@ function initQuoteLookup() {
 
     validationMsg.style.display = 'none';
 
+    // Auto-uppercase logic as the user types
+    input.addEventListener('input', () => {
+        // Force uppercase
+        input.value = input.value.toUpperCase();
+        
+        // Reset validation styles
+        validationMsg.style.display = 'none';
+        input.classList.remove('border-red-500');
+    });
+
     submitBtn.addEventListener('click', async (e) => {
         e.preventDefault();
 
@@ -36,6 +46,7 @@ function initQuoteLookup() {
         }
 
         submitBtn.disabled = true;
+        const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Loading...';
 
         try {
@@ -54,7 +65,7 @@ function initQuoteLookup() {
             if (contentType.includes('application/pdf')) {
                 const blob = await res.blob();
                 const url = window.URL.createObjectURL(blob);
-                showToast('Report PDF successfully retrieved', 'success');
+                showToast('Quote PDF successfully retrieved', 'success');
 
                 // Open PDF in new tab
                 window.open(url, '_blank');
@@ -76,20 +87,19 @@ function initQuoteLookup() {
                 return;
             }
 
-            // Fallback (should never happen)
             showToast(data.message || 'Unexpected response', 'error');
 
         } catch (err) {
             console.error(err);
-            showToast('Failed to load report', 'error');
+            showToast('Failed to load quote PDF', 'error');
         } finally {
+            // Reset Button State
             submitBtn.disabled = false;
             submitBtn.textContent = 'Get Report';
-        }
-    });
 
-    input.addEventListener('input', () => {
-        validationMsg.style.display = 'none';
-        input.classList.remove('border-red-500');
+            // Wipe and Refocus (Regardless of success/fail)
+            input.value = '';
+            input.focus();
+        }
     });
 }
