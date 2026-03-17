@@ -125,11 +125,18 @@ class QuotesController
                         $code .= $chars[random_int(0, strlen($chars) - 1)];
                     }
                     $quote->access_code = $code;
+
+                    // Set Expiry to 2 weeks from now
+                    $quote->date_expires = \Carbon\Carbon::now()->addWeeks(2);
+                    
                     $quote->status_id = 2; // Posted
                 }
             } else {
                 if (isset($data['access_code'])) {
                     $quote->access_code = trim($data['access_code']);
+                    
+                    // Also set expiry for manually assigned codes
+                    $quote->date_expires = \Carbon\Carbon::now()->addWeeks(2);
                 }
             }
 
@@ -217,6 +224,8 @@ class QuotesController
                     ->orWhere('property_address', 'LIKE', $term)
                     ->orWhere('city', 'LIKE', $term)
                     ->orWhere('access_code', 'LIKE', $term)
+                    ->orWhere('date_expires', 'LIKE', $term)
+                    ->orWhere('created_at', 'LIKE', $term)
                     ->orWhere('postal_code', 'LIKE', $term);
                 
                 $q->orWhereHas('owner', function ($rel) use ($term) {
@@ -280,6 +289,7 @@ class QuotesController
         $rowItem['encoded_id'] = IdEncoder::encode((int)$quote->quote_id);
         $rowItem['status_label'] = $quote->status_label;
         $rowItem['created_at_formatted'] = $quote->created_at ? $quote->created_at->format('M j, Y') : 'N/A';
+        $rowItem['date_expires_formatted'] = $quote->date_expires ? $quote->date_expires->format('M j, Y') : 'N/A';
         
         // Ensure access_code is ready for the view
         $rowItem['access_code'] = !empty($quote->access_code) ? $quote->access_code : '---';

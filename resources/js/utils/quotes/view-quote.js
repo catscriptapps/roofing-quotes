@@ -101,6 +101,7 @@ export function initViewQuote() {
 
         // 5. Log History
         if (document.getElementById('view-quote-created')) document.getElementById('view-quote-created').textContent = data.createdAt || '---';
+        if (document.getElementById('view-quote-expires')) document.getElementById('view-quote-expires').textContent = data.expiresAt || '---';
         if (document.getElementById('view-quote-updated')) document.getElementById('view-quote-updated').textContent = data.updatedAt || '---';
 
         // 6. Inspector Info (Targets your modal-detail-owner.php IDs)

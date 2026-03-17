@@ -31,19 +31,20 @@ $fullAddress = sprintf(
 );
 
 $quoteDataAttrs = [
-    'encoded-id'   => $rowItem['encoded_id'] ?? '',
-    'quote-number' => $rowItem['quote_number'] ?? '',
-    'address'      => $propertyAddress,
-    'city'         => $rowItem['city'] ?? 'Barrie',
-    'postal-code'  => $rowItem['postal_code'] ?? '',
-    'region-name'  => $rowItem['region_name'] ?? 'Ontario',
-    'country-name' => $rowItem['country_name'] ?? 'Canada',
-    'access-code'  => $rowItem['access_code'] ?: '----', 
+    'encoded-id'    => $rowItem['encoded_id'] ?? '',
+    'quote-number'  => $rowItem['quote_number'] ?? '',
+    'address'       => $propertyAddress,
+    'city'          => $rowItem['city'] ?? 'Barrie',
+    'postal-code'   => $rowItem['postal_code'] ?? '',
+    'region-name'   => $rowItem['region_name'] ?? 'Ontario',
+    'country-name'  => $rowItem['country_name'] ?? 'Canada',
+    'access-code'   => $rowItem['access_code'] ?: '----', 
 
-    'pdf-file'     => $rowItem['pdf_file_name'] ?? '',
-    'status-label' => (int)($rowItem['status_id'] ?? 1) === 2 ? 'Posted' : 'Draft',
-    'created-at'   => $rowItem['created_at_formatted'] ?? 'N/A',
-    'updated-at'   => $updatedAt, 
+    'pdf-file'      => $rowItem['pdf_file_name'] ?? '',
+    'status-label'  => (int)($rowItem['status_id'] ?? 1) === 2 ? 'Posted' : 'Draft',
+    'created-at'    => $rowItem['created_at_formatted'] ?? 'N/A',
+    'expires-at'    => $rowItem['date_expires_formatted'] ?? 'N/A',
+    'updated-at'    => $updatedAt, 
 
     // Owner Data 
     'owner-name'                    => $ownerFullName,
@@ -178,8 +179,8 @@ $statusBadge = match ((int)($rowItem['status_id'] ?? 1)) {
             <?= $rowItem['created_at_formatted'] ?? 'N/A' ?>
         </div>
         <div class="text-[11px] text-gray-600 dark:text-gray-400 mt-1">
-            <span class="block font-bold text-gray-400 uppercase text-[9px] tracking-widest">Updated</span>
-            <?= $updatedAt ?>
+            <span class="block font-bold text-gray-400 uppercase text-[9px] tracking-widest">Expires</span>
+            <?= $rowItem['date_expires_formatted'] ?? 'N/A' ?>
         </div>
     </td>
 

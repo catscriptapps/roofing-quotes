@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-10 px-2">
-                    <div class="md:col-span-8">
+                    <div class="md:col-span-7">
                         <h3 class="text-xs font-black text-red-600 uppercase tracking-[0.3em] flex items-center gap-2 mb-6">
                             <span class="w-8 h-[2px] bg-red-600"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
@@ -108,7 +108,7 @@
                         </div>
                     </div>
 
-                    <div class="md:col-span-4">
+                    <div class="md:col-span-5">
                         <h3 class="text-xs font-black text-red-600 uppercase tracking-[0.3em] flex items-center gap-2 mb-6">
                             <span class="w-8 h-[2px] bg-red-600"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
@@ -120,6 +120,10 @@
                             <div class="flex flex-col">
                                 <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Date Generated</span>
                                 <span id="view-quote-created" class="text-xs font-bold text-gray-900 dark:text-white">---</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 text-red-500/80">Date Expires</span>
+                                <span id="view-quote-expires" class="text-xs font-bold text-gray-900 dark:text-white">---</span>
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Last System Update</span>
