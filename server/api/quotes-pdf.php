@@ -44,12 +44,19 @@ try {
     // Clear any previous output to prevent PDF corruption
     if (ob_get_level()) ob_end_clean();
 
+    // Security Headers to reduce browser "suspicion"
+    header("X-Content-Type-Options: nosniff");
+    header("Content-Security-Policy: default-src 'self'");
+    
     header('Content-Type: application/pdf');
-    // 'inline' allows viewing in browser, 'attachment' would force download
-    header('Content-Disposition: inline; filename="' . $filename . '"');
+    header('Content-Disposition: inline; filename="' . basename($filename) . '"');
+    header('Content-Transfer-Encoding: binary');
     header('Content-Length: ' . filesize($pdfPath));
-    header('Cache-Control: private, max-age=0, must-revalidate');
-    header('Pragma: public');
+    
+    // Improved Caching for dynamic PDF retrieval
+    header('Cache-Control: private, no-transform, no-store, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
 
     readfile($pdfPath);
     exit;
