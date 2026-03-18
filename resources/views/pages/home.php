@@ -51,10 +51,14 @@ declare(strict_types=1);
                     <h3 class="font-bold text-secondary-900 dark:text-white">Pro PDF</h3>
                 </div>
                 <div class="p-6 rounded-3xl bg-gray-50 dark:bg-secondary-900/40 border border-gray-100 dark:border-secondary-800 sm:col-span-2">
-                    <p class="text-sm text-secondary-400 dark:text-secondary-500 italic">
-                        <span class="inline-block w-2 h-2 bg-red-600 rounded-full mr-2"></span>
-                        Enter the code published by your inspector for instant access.
-                    </p>
+
+                    <section class="text-center py-6" data-aos="zoom-in">
+                        <h2 class="text-2xl font-black text-secondary-900 dark:text-white mb-4">Inspector Portal</h2>
+                        <a href="<?= $baseUrl ?>login" data-login-button
+                            class="inline-block px-10 py-4 bg-secondary-900 dark:bg-white text-white dark:text-secondary-950 font-black rounded-xl hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-all shadow-xl">
+                            Launch <?= $appName ?>
+                        </a>
+                    </section>
                 </div>
             </div>
         </section>
@@ -83,14 +87,6 @@ declare(strict_types=1);
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section class="text-center py-6" data-aos="zoom-in">
-            <h2 class="text-2xl font-black text-secondary-900 dark:text-white mb-4">Inspector Portal</h2>
-            <a href="<?= $baseUrl ?>login" data-login-button
-                class="inline-block px-10 py-4 bg-secondary-900 dark:bg-white text-white dark:text-secondary-950 font-black rounded-xl hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-all shadow-xl">
-                Launch <?= $appName ?>
-            </a>
         </section>
 
     </div>
