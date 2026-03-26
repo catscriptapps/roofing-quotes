@@ -10,7 +10,7 @@ import { copyToClipboard } from '../utils/globals/copy-to-clipboard.js';
 import { initPDFDownload } from '../utils/quotes/pdf-download.js'; // 1. Import the new logic
 
 /**
- * Initialize the Roofing Quotes page logic.
+ * Initialize the Completed Estimates page logic.
  */
 export function init() {
     initQuotesModal();

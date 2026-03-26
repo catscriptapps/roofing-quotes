@@ -12,7 +12,7 @@ declare(strict_types=1);
             <div class="lg:w-1/2 text-center lg:text-left">
                 <h1 class="text-5xl lg:text-6xl font-black text-secondary-900 dark:text-white mb-6 tracking-tighter leading-tight">
                     Access Your <br class="hidden md:block">
-                    <span class="text-red-600">Roofing Quote</span>
+                    <span class="text-red-600">Completed Estimate</span>
                 </h1>
                 <p class="text-lg text-secondary-500 dark:text-secondary-400 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
                     Enter your 6-digit access code below to securely view your professional roofing assessment.

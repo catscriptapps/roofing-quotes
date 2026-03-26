@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Project:         Roofing Quotes Application for DC United Roofing, Barrie
+ * Project:         Completed Estimates Application for DC United Roofing, Barrie
  * Platform:        CatScript-13
  * Version:         1.1.0
  * Client:          Chigozie (Cat) Nduanya

@@ -38,8 +38,8 @@ function resetFaqsTable(): array
         $defaultFaqs = [
 
             [
-                'question' => 'What is the Roofing Quotes system used for?',
-                'answer' => 'The Roofing Quotes system is used by inspectors to upload completed roofing quote PDFs and securely share them with clients. Inspectors create a quote entry in the system, upload the PDF file, and generate an access code that allows the client to view the quote online.'
+                'question' => 'What is the Completed Estimates system used for?',
+                'answer' => 'The Completed Estimates system is used by inspectors to upload completed roofing quote PDFs and securely share them with clients. Inspectors create a quote entry in the system, upload the PDF file, and generate an access code that allows the client to view the quote online.'
             ],
 
             [
@@ -54,7 +54,7 @@ function resetFaqsTable(): array
 
             [
                 'question' => 'How do clients access their roofing quote?',
-                'answer' => 'Clients can access their quote from the home page of the Roofing Quotes website. They simply enter the 6-digit access code provided by the inspector. Once the code is entered, the system will display the associated quote PDF for viewing or downloading.'
+                'answer' => 'Clients can access their quote from the home page of the Completed Estimates website. They simply enter the 6-digit access code provided by the inspector. Once the code is entered, the system will display the associated quote PDF for viewing or downloading.'
             ],
 
             [
@@ -79,7 +79,7 @@ function resetFaqsTable(): array
             ]);
         }
 
-        $messages[] = "seeded " . count($defaultFaqs) . " roofing quotes faqs with active status";
+        $messages[] = "seeded " . count($defaultFaqs) . " Completed Estimates faqs with active status";
 
     } catch (\Throwable $e) {
         $messages[] = "Error resetting " . ($tableName ?? 'faqs') . " table: " . $e->getMessage();

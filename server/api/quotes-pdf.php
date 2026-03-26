@@ -7,7 +7,7 @@ use App\Models\Quote;
 use App\Utils\IdEncoder;
 
 /**
- * PDF Proxy for Roofing Quotes
+ * PDF Proxy for Completed Estimates
  * Securely streams PDFs from /server/storage/quotes/
  */
 

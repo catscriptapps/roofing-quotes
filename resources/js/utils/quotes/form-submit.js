@@ -6,7 +6,7 @@ import { updateCount } from '../../components/table-pagination-count.js';
 import { showToast } from '../../ui/toast.js';
 
 /**
- * Maps form data to a FormData object for Roofing Quotes
+ * Maps form data to a FormData object for Completed Estimates
  */
 function getPayload(form, mode) {
     const formData = new FormData(form);

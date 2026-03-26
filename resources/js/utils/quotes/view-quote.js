@@ -3,7 +3,7 @@ import { modalDetailOwner } from "../../ui/modal-detail-owner";
 import { copyToClipboard } from "../globals/copy-to-clipboard";
 
 /**
- * Initialize the detailed View Modal for Roofing Quotes.
+ * Initialize the detailed View Modal for Completed Estimates.
  */
 export function initViewQuote() {
     document.addEventListener('click', (e) => {
@@ -62,7 +62,7 @@ export function initViewQuote() {
         // 3. Owner detail logic
         modalDetailOwner('quote', data);
 
-        // 4. PDF Proxy Logic (Roofing Quotes)
+        // 4. PDF Proxy Logic (Completed Estimates)
         const pdfLinkEl = document.getElementById('view-quote-pdf-link');
         const pdfIconContainer = document.getElementById('view-quote-pdf-icon');
 

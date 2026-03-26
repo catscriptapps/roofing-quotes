@@ -25,7 +25,7 @@ function initFormFeatures(formId, mode, modalInstance) {
 
 // --- Add Quote ---
 async function openAddQuoteModal() {
-    // Defaulting to Canada (1) and Ontario (1) for Roofing Quotes
+    // Defaulting to Canada (1) and Ontario (1) for Completed Estimates
     const defaultCountryId = 1; 
     const [countries, regions] = await Promise.all([
         fetchCountries(),

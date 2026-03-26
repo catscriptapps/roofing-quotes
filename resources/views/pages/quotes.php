@@ -13,7 +13,7 @@ $quoteRows = $GLOBALS['quoteRows'] ?? '';
         <div class="flex-1">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-sans">Quotes</h1>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Manage PDF uploads, property details, and tracking for the roofing quotes project.
+                Manage PDF uploads, property details, and tracking for the completed estimates project.
             </p>
         </div>
 

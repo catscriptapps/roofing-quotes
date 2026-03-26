@@ -105,6 +105,17 @@
       "_animations.min.js"
     ]
   },
+  "resources/js/pages/completed-estimates-page.js": {
+    "file": "js/completed-estimates-page.min.js",
+    "name": "completed-estimates-page",
+    "src": "resources/js/pages/completed-estimates-page.js",
+    "isEntry": true,
+    "imports": [
+      "_home-events.min.js",
+      "_animations.min.js",
+      "_toast.min.js"
+    ]
+  },
   "resources/js/pages/contact-page.js": {
     "file": "js/contact-page.min.js",
     "name": "contact-page",
@@ -207,17 +218,6 @@
     "imports": [
       "_form-validator.min.js",
       "_spinner-utils.min.js",
-      "_toast.min.js"
-    ]
-  },
-  "resources/js/pages/roofing-quotes-page.js": {
-    "file": "js/roofing-quotes-page.min.js",
-    "name": "roofing-quotes-page",
-    "src": "resources/js/pages/roofing-quotes-page.js",
-    "isEntry": true,
-    "imports": [
-      "_home-events.min.js",
-      "_animations.min.js",
       "_toast.min.js"
     ]
   },

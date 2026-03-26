@@ -1,5 +1,6 @@
 [
   "about-page",
+  "completed-estimates-page",
   "contact-page",
   "faqs-page",
   "history-page",
@@ -8,6 +9,5 @@
   "profile-page",
   "quotes-page",
   "reset-password-page",
-  "roofing-quotes-page",
   "users-page"
 ]

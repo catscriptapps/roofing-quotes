@@ -39,7 +39,7 @@ class MailService
             $mail->Port         = 25;           // Port 25 is the standard for local relays
 
             // Recipients
-            $mail->setFrom('noreply@quotes.dcunitedroofing.com', 'Roofing Quotes');
+            $mail->setFrom('noreply@dcunitedroofing.com', 'Completed Estimates');
             $mail->addAddress($to);
 
             // Content

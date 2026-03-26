@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 /**
- * Eloquent Quote model for Roofing Quotes
+ * Eloquent Quote model for Completed Estimates
  */
 class Quote extends Model
 {
