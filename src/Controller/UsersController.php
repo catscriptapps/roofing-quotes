@@ -8,6 +8,7 @@ namespace Src\Controller;
 use App\Models\User;
 use App\Utils\IdEncoder;
 use App\Traits\RecentActivityLogger;
+use Src\Service\AuthService;
 
 class UsersController
 {
@@ -45,7 +46,7 @@ class UsersController
     {
         $query = $_GET['q'] ?? '';
         $page = (int)($_GET['page'] ?? 1);
-        $perPage = 100; // Keeping your 100 default
+        $perPage = 100;
         $offset = ($page - 1) * $perPage;
 
         // Standardized eager loading for geography
@@ -54,8 +55,16 @@ class UsersController
             ->leftJoin('regions', 'users.region_id', '=', 'regions.id')
             ->select('users.*');
 
+        /**
+         * SECURITY: Hide ID 1 unless AuthService::isCat()
+         */
+        if (!AuthService::isCat()) {
+            $builder->where('users.id', '!=', 1);
+        }
+
         if (!empty($query)) {
             $builder->where(function ($q) use ($query) {
+                // Using nested where to ensure the ID exclusion above is always respected
                 $q->where('users.first_name', 'LIKE', "%{$query}%")
                     ->orWhere('users.last_name', 'LIKE', "%{$query}%")
                     ->orWhere('users.email', 'LIKE', "%{$query}%")
@@ -65,7 +74,7 @@ class UsersController
             });
         }
 
-        // 1. Get the total count
+        // 1. Get the total count (will now reflect the exclusion)
         $totalFiltered = $builder->count();
 
         // 2. Apply limit, offset, and sort
